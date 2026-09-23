@@ -667,14 +667,130 @@ body::after {
   color: var(--text-muted);
 }
 
-/* Responsive */
+/* Mobile Touch Target & Interaction Optimizations */
+button, 
+.btn, 
+.nav-item, 
+.tab-btn, 
+.whatsapp-btn,
+a.btn {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  -webkit-user-select: none;
+  cursor: pointer;
+}
+
+button:active, 
+.btn:active, 
+.whatsapp-btn:active,
+a.btn:active {
+  transform: scale(0.97);
+  transition: transform 0.1s ease;
+}
+
+/* Responsive & Mobile Phone Optimizations */
 @media (max-width: 768px) {
-  .hero-title {
-    font-size: 2.2rem;
+  html, body {
+    overflow-x: hidden;
+    width: 100%;
   }
+
+  .navbar {
+    padding: 12px 4%;
+  }
+
+  .brand-text h1 {
+    font-size: 1.15rem;
+  }
+
+  .hero-section {
+    padding: 40px 4% 30px;
+  }
+
+  .hero-title {
+    font-size: 2rem;
+    line-height: 1.25;
+  }
+
+  .hero-subtitle {
+    font-size: 0.95rem;
+    margin-bottom: 24px;
+  }
+
+  .hero-cta-group {
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+  }
+
+  .hero-cta-group .btn {
+    width: 100%;
+    min-height: 50px;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .packages-section {
+    padding: 40px 4%;
+  }
+
+  .section-title {
+    font-size: 1.8rem;
+  }
+
+  .packages-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .pkg-card {
+    padding: 24px 18px;
+  }
+
+  .calc-section {
+    padding: 40px 4%;
+  }
+
+  .calc-card {
+    padding: 20px 16px;
+  }
+
   .calc-grid {
     grid-template-columns: 1fr;
+    gap: 20px;
   }
+
+  .calc-output-amount {
+    font-size: 2.2rem;
+  }
+
+  .modal-overlay {
+    padding: 12px;
+    align-items: flex-end;
+  }
+
+  .modal-box {
+    padding: 24px 18px;
+    max-height: 85vh;
+    border-radius: 20px 20px 0 0;
+  }
+
+  .form-control {
+    font-size: 16px; /* Prevents auto-zoom on iOS */
+    padding: 14px 16px;
+    min-height: 48px;
+  }
+
+  .live-payout-ticker {
+    left: 12px;
+    right: 12px;
+    bottom: 12px;
+    font-size: 0.8rem;
+  }
+
   .nav-links {
     display: none;
   }

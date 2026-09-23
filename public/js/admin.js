@@ -307,11 +307,13 @@ async function handleAdminAddLead(e) {
   }
 }
 
+let adminUsersCache = [];
+
 // Load Users
 async function loadAdminUsers() {
   const token = localStorage.getItem('auth_token');
-  const tbody = document.getElementById('adminUsersTableBody');
-  if (!tbody) return;
+  const approvalTbody = document.getElementById('adminUserApprovalTableBody');
+  const allUsersTbody = document.getElementById('adminUsersTableBody');
 
   try {
     const res = await fetch(`${API_BASE}/admin/users`, {
@@ -320,26 +322,207 @@ async function loadAdminUsers() {
     const data = await res.json();
     if (!data.success) return;
 
-    tbody.innerHTML = data.users.map(u => `
-      <tr>
-        <td style="font-family: monospace; font-weight: 800; color: var(--accent-gold);">${u.permanentId}</td>
-        <td>
-          <div style="font-weight: 700;">${u.fullName}</div>
-          <div style="font-size: 0.75rem; color: var(--text-dim);">${u.email} • ${u.phone}</div>
-        </td>
-        <td>
-          <span style="font-size: 0.75rem; padding: 2px 8px; border-radius: 4px; background: rgba(255,255,255,0.08);">
-            ${u.activePackageId || 'Free / Locked'}
-          </span>
-        </td>
-        <td style="font-weight: 800; color: var(--accent-gold);">₹${(u.walletBalance || 0).toFixed(2)}</td>
-        <td style="font-weight: 800; color: var(--accent-green);">₹${(u.totalEarned || 0).toFixed(2)}</td>
-        <td>${u.referralCount || 0}</td>
-        <td style="font-family: monospace; color: var(--text-dim);">${u.referredBy || 'Direct'}</td>
-      </tr>
-    `).join('');
+    adminUsersCache = data.users || [];
+
+    // Count pending users
+    const pendingUsers = adminUsersCache.filter(u => u.role !== 'admin' && (u.status === 'PENDING' || !u.isVerified));
+    const pendingBadge = document.getElementById('pendingUsersCountBadge');
+    if (pendingBadge) pendingBadge.innerText = pendingUsers.length;
+
+    renderAdminUsersList(adminUsersCache);
   } catch (err) {
     console.error('Users error:', err);
+  }
+}
+
+function renderAdminUsersList(users) {
+  const approvalTbody = document.getElementById('adminUserApprovalTableBody');
+  const allUsersTbody = document.getElementById('adminUsersTableBody');
+
+  const regularUsers = users.filter(u => u.role !== 'admin');
+
+  // 1. Approval Queue
+  if (approvalTbody) {
+    if (regularUsers.length === 0) {
+      approvalTbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding: 24px; color: var(--text-dim);">No registered users yet.</td></tr>`;
+    } else {
+      approvalTbody.innerHTML = regularUsers.map(u => {
+        const isVerified = u.isVerified || u.status === 'APPROVED';
+        const isRejected = u.status === 'REJECTED';
+        const statusBadge = isVerified 
+          ? `<span class="status-tag approved">✓ ACTIVE / VERIFIED</span>`
+          : isRejected 
+          ? `<span class="status-tag rejected" style="background: rgba(239, 68, 68, 0.15); color: #ef4444;">✕ REJECTED</span>`
+          : `<span class="status-tag pending" style="background: rgba(245, 158, 11, 0.15); color: #F59E0B;">⏳ PENDING APPROVAL</span>`;
+
+        return `
+          <tr>
+            <td>
+              <div style="font-family: monospace; font-weight: 800; color: var(--accent-gold); font-size: 1rem;">${u.permanentId}</div>
+              <div style="font-size: 0.75rem; color: var(--text-dim);">${new Date(u.createdAt || Date.now()).toLocaleDateString('en-IN')}</div>
+            </td>
+            <td>
+              <div style="font-weight: 800; color: #fff; font-size: 0.95rem;">${u.fullName}</div>
+              <div style="font-size: 0.8rem; color: var(--text-muted); font-family: monospace;">📱 +91 ${u.phone}</div>
+              <div style="font-size: 0.75rem; color: var(--text-dim);">${u.email}</div>
+            </td>
+            <td>${statusBadge}</td>
+            <td>
+              <div style="font-weight: 700; color: var(--accent-cyan);">${u.activePackageId ? u.activePackageId.replace('pkg_', '').toUpperCase() : 'Locked (No Package)'}</div>
+              <div style="font-size: 0.75rem; color: var(--text-dim);">Wallet: ₹${(u.walletBalance || 0).toFixed(2)}</div>
+            </td>
+            <td>
+              <div style="font-weight: 700;">${u.referralCount || 0} Referrals</div>
+              <div style="font-size: 0.75rem; color: var(--text-dim);">Upline: ${u.referredBy || 'Direct'}</div>
+            </td>
+            <td>
+              <div style="display: flex; flex-direction: column; gap: 6px;">
+                <div style="display: flex; gap: 6px;">
+                  <button class="btn-approve" style="flex: 1; padding: 6px 10px; font-size: 0.75rem;" onclick="approveUser('${u.id}', '${u.fullName}')">
+                    ✓ Accept User
+                  </button>
+                  <button class="btn-reject" style="flex: 1; padding: 6px 10px; font-size: 0.75rem;" onclick="rejectUser('${u.id}', '${u.fullName}')">
+                    ✕ Reject
+                  </button>
+                </div>
+                <button class="btn btn-outline btn-sm" style="font-size: 0.75rem; padding: 4px 8px; color: var(--accent-gold); border-color: rgba(245, 158, 11, 0.4);" onclick="openUnlockPackageModal('${u.id}', '${u.fullName}', '${u.permanentId}')">
+                  🔓 Unlock Package (₹19 - ₹1499)
+                </button>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+  }
+
+  // 2. All Users Table
+  if (allUsersTbody) {
+    if (regularUsers.length === 0) {
+      allUsersTbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding: 24px; color: var(--text-dim);">No users registered yet.</td></tr>`;
+    } else {
+      allUsersTbody.innerHTML = regularUsers.map(u => `
+        <tr>
+          <td style="font-family: monospace; font-weight: 800; color: var(--accent-gold);">${u.permanentId}</td>
+          <td>
+            <div style="font-weight: 700;">${u.fullName}</div>
+            <div style="font-size: 0.75rem; color: var(--text-dim);">${u.email} • +91 ${u.phone}</div>
+          </td>
+          <td>
+            <span style="font-size: 0.75rem; padding: 3px 8px; border-radius: 4px; background: rgba(255,255,255,0.08); font-weight: 700; color: var(--accent-cyan);">
+              ${u.activePackageId || 'Free / Locked'}
+            </span>
+          </td>
+          <td style="font-weight: 800; color: var(--accent-gold);">₹${(u.walletBalance || 0).toFixed(2)}</td>
+          <td style="font-weight: 800; color: var(--accent-green);">₹${(u.totalEarned || 0).toFixed(2)}</td>
+          <td>${u.referralCount || 0}</td>
+          <td style="font-family: monospace; color: var(--text-dim);">${u.referredBy || 'Direct'}</td>
+        </tr>
+      `).join('');
+    }
+  }
+}
+
+// Search / Filter Users
+function filterAdminUsers() {
+  const query = (document.getElementById('userSearchInput')?.value || '').toLowerCase().trim();
+  if (!query) {
+    renderAdminUsersList(adminUsersCache);
+    return;
+  }
+
+  const filtered = adminUsersCache.filter(u => 
+    (u.fullName && u.fullName.toLowerCase().includes(query)) ||
+    (u.phone && u.phone.includes(query)) ||
+    (u.permanentId && u.permanentId.toLowerCase().includes(query)) ||
+    (u.email && u.email.toLowerCase().includes(query))
+  );
+
+  renderAdminUsersList(filtered);
+}
+
+// 1-Click Accept / Approve User
+async function approveUser(userId, userName) {
+  if (!confirm(`Accept and activate user ${userName}? They will be verified to earn and refer.`)) return;
+  const token = localStorage.getItem('auth_token');
+
+  try {
+    const res = await fetch(`${API_BASE}/admin/users/${userId}/approve`, {
+      method: 'POST',
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    const data = await res.json();
+    alert(data.message);
+    loadAdminUsers();
+  } catch (err) {
+    console.error('Approve user error:', err);
+    alert('Failed to approve user.');
+  }
+}
+
+// 1-Click Reject User
+async function rejectUser(userId, userName) {
+  if (!confirm(`Reject user account for ${userName}?`)) return;
+  const token = localStorage.getItem('auth_token');
+
+  try {
+    const res = await fetch(`${API_BASE}/admin/users/${userId}/reject`, {
+      method: 'POST',
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    const data = await res.json();
+    alert(data.message);
+    loadAdminUsers();
+  } catch (err) {
+    console.error('Reject user error:', err);
+    alert('Failed to reject user.');
+  }
+}
+
+// Manually Unlock Package for User
+async function openUnlockPackageModal(userId, userName, permanentId) {
+  const choice = prompt(
+    `Select package to unlock for ${userName} (${permanentId}):\n\n` +
+    `1. Starter Pass (₹19 - 5 Leads)\n` +
+    `2. Kickstart Pro (₹99 - 25 Leads)\n` +
+    `3. Silver Growth Funnel (₹299 - 75 Leads)\n` +
+    `4. Gold Mastery (₹699 - 200 Leads)\n` +
+    `5. Diamond VIP Elite (₹1499 - 500 Leads)\n\n` +
+    `Enter number 1, 2, 3, 4, or 5:`
+  );
+
+  if (!choice) return;
+
+  const pkgMap = {
+    '1': 'pkg_starter_19',
+    '2': 'pkg_kickstart_99',
+    '3': 'pkg_silver_299',
+    '4': 'pkg_gold_699',
+    '5': 'pkg_diamond_1499'
+  };
+
+  const packageId = pkgMap[choice.trim()];
+  if (!packageId) {
+    alert('Invalid choice. Please enter a number between 1 and 5.');
+    return;
+  }
+
+  const token = localStorage.getItem('auth_token');
+  try {
+    const res = await fetch(`${API_BASE}/admin/users/${userId}/unlock-package`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({ packageId })
+    });
+    const data = await res.json();
+    alert(data.message);
+    loadAdminUsers();
+  } catch (err) {
+    console.error('Unlock error:', err);
+    alert('Failed to unlock package.');
   }
 }
 

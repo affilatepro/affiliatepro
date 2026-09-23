@@ -10,11 +10,13 @@
     "amount": 19,
     "affiliateCommission": 11.4,
     "platformRevenue": 7.6,
-    "status": "pending_payment",
+    "status": "approved",
     "utrNumber": null,
     "paymentMethod": "REAL_UPI_QR_INTENT",
     "createdAt": "2026-09-23T07:11:34.333Z",
-    "updatedAt": "2026-09-23T07:11:34.333Z"
+    "updatedAt": "2026-09-23T12:47:44.094Z",
+    "verifiedAt": "2026-09-23T12:47:44.094Z",
+    "verifiedBy": "Master Administrator"
   },
   {
     "id": "ORD_355831_MUDRAN8X",

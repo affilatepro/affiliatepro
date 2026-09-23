@@ -26,8 +26,11 @@
       </div>
 
       <nav style="padding: 16px 14px; display: flex; flex-direction: column; gap: 6px; flex-grow: 1;">
-        <button class="nav-item active" onclick="switchAdminTab('orders')">
-          <span class="icon">📦</span> Orders & UTRs (<span id="pendingOrdersCountBadge" style="color: var(--accent-gold); font-weight: 800;">0</span>)
+        <button class="nav-item active" onclick="switchAdminTab('users-approval')">
+          <span class="icon">👥</span> User Signups & Approvals (<span id="pendingUsersCountBadge" style="color: var(--accent-gold); font-weight: 800;">0</span>)
+        </button>
+        <button class="nav-item" onclick="switchAdminTab('orders')">
+          <span class="icon">📦</span> Package Orders & UTRs (<span id="pendingOrdersCountBadge" style="color: var(--accent-gold); font-weight: 800;">0</span>)
         </button>
         <button class="nav-item" onclick="switchAdminTab('withdrawals')">
           <span class="icon">💸</span> Payouts & Withdrawals (<span id="pendingPayoutsCountBadge" style="color: var(--accent-green); font-weight: 800;">0</span>)
@@ -35,8 +38,8 @@
         <button class="nav-item" onclick="switchAdminTab('leads')">
           <span class="icon">🔥</span> Leads Pool Manager
         </button>
-        <button class="nav-item" onclick="switchAdminTab('users')">
-          <span class="icon">👥</span> All Users & Downlines
+        <button class="nav-item" onclick="switchAdminTab('all-users')">
+          <span class="icon">📊</span> All Users & Downlines
         </button>
         <button class="nav-item" onclick="switchAdminTab('settings')">
           <span class="icon">⚙️</span> Platform & UPI Settings
@@ -86,11 +89,46 @@
         </div>
       </div>
 
+      <!-- TAB 0: USER SIGNUPS & APPROVAL QUEUE -->
+      <div class="tab-content active" id="admin-tab-users-approval">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+          <div>
+            <h3 style="font-size: 1.3rem; font-weight: 800;">👥 User Signups & ID Verification Queue</h3>
+            <p style="font-size: 0.85rem; color: var(--text-muted);">Real-time signups. 1-Click Accept, Reject, or Manually Unlock Package on Payment.</p>
+          </div>
+          <div style="display: flex; gap: 10px; align-items: center;">
+            <input type="text" id="userSearchInput" class="form-control" style="width: 240px; padding: 8px 12px; font-size: 0.85rem;" placeholder="🔍 Search ID / Phone / Name..." oninput="filterAdminUsers()">
+            <button class="btn btn-outline btn-sm" onclick="loadAdminUsers()">🔄 Refresh</button>
+          </div>
+        </div>
+
+        <div class="table-responsive">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Permanent ID / Date</th>
+                <th>Affiliate Name & Contact</th>
+                <th>Account Status</th>
+                <th>Active Package</th>
+                <th>Referrals / Upline</th>
+                <th>1-Click Actions</th>
+              </tr>
+            </thead>
+            <tbody id="adminUserApprovalTableBody">
+              <!-- Dynamically populated -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
       <!-- TAB 1: ORDERS & UTR VERIFICATION -->
-      <div class="tab-content active" id="admin-tab-orders">
+      <div class="tab-content" id="admin-tab-orders">
         <div style="display: flex; justify-content: space-between; align-items: center;">
-          <h3 style="font-size: 1.3rem; font-weight: 800;">📦 Package Orders & UTR Verification Queue</h3>
-          <span style="font-size: 0.85rem; color: var(--text-muted);">Approving unlocks package & sends 60% cash to referrer</span>
+          <div>
+            <h3 style="font-size: 1.3rem; font-weight: 800;">📦 Package Orders & Payment Verification</h3>
+            <p style="font-size: 0.85rem; color: var(--text-muted);">Approving unlocks the package and instantly credits 60% real INR commission to the referrer.</p>
+          </div>
+          <button class="btn btn-outline btn-sm" onclick="loadAdminOrders()">🔄 Refresh</button>
         </div>
 
         <div class="table-responsive">
@@ -101,7 +139,7 @@
                 <th>Buyer Details</th>
                 <th>Package & Price</th>
                 <th>Submitted UTR / Proof</th>
-                <th>60% Split / Referrer</th>
+                <th>60% Commission / Referrer</th>
                 <th>Status</th>
                 <th>Action</th>
               </tr>
@@ -116,8 +154,11 @@
       <!-- TAB 2: WITHDRAWALS & PAYOUTS -->
       <div class="tab-content" id="admin-tab-withdrawals">
         <div style="display: flex; justify-content: space-between; align-items: center;">
-          <h3 style="font-size: 1.3rem; font-weight: 800;">💸 User Withdrawal Payout Requests</h3>
-          <span style="font-size: 0.85rem; color: var(--text-muted);">Approve payouts after sending funds via UPI or Bank</span>
+          <div>
+            <h3 style="font-size: 1.3rem; font-weight: 800;">💸 User Withdrawal Payout Requests</h3>
+            <p style="font-size: 0.85rem; color: var(--text-muted);">Approve payouts after sending funds via UPI or Bank Transfer.</p>
+          </div>
+          <button class="btn btn-outline btn-sm" onclick="loadAdminWithdrawals()">🔄 Refresh</button>
         </div>
 
         <div class="table-responsive">
@@ -196,10 +237,10 @@
         </div>
       </div>
 
-      <!-- TAB 4: USERS & DOWNLINES -->
-      <div class="tab-content" id="admin-tab-users">
+      <!-- TAB 4: ALL USERS DIRECTORY -->
+      <div class="tab-content" id="admin-tab-all-users">
         <div style="display: flex; justify-content: space-between; align-items: center;">
-          <h3 style="font-size: 1.3rem; font-weight: 800;">👥 Registered Affiliates Directory</h3>
+          <h3 style="font-size: 1.3rem; font-weight: 800;">📊 Registered Affiliates Directory & Earnings</h3>
         </div>
 
         <div class="table-responsive">

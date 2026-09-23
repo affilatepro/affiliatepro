@@ -809,6 +809,62 @@ router.get('/admin/users', authenticateToken, requireAdmin, (req, res) => {
   return res.json({ success: true, users });
 });
 
+// Admin: Approve User Account
+router.post('/admin/users/:id/approve', authenticateToken, requireAdmin, (req, res) => {
+  const userId = req.params.id;
+  const user = db.users.findById(userId);
+  if (!user) return res.status(404).json({ success: false, message: 'User not found' });
+
+  const updated = db.users.update(userId, { isVerified: true, status: 'APPROVED' });
+  return res.json({ success: true, message: `User ${user.fullName} (${user.permanentId}) approved!`, user: updated });
+});
+
+// Admin: Unlock Package for User Manually
+router.post('/admin/users/:id/unlock-package', authenticateToken, requireAdmin, (req, res) => {
+  const userId = req.params.id;
+  const { packageId } = req.body;
+  const user = db.users.findById(userId);
+  if (!user) return res.status(404).json({ success: false, message: 'User not found' });
+
+  const pkg = db.packages.findById(packageId);
+  if (!pkg) return res.status(404).json({ success: false, message: 'Invalid package selected' });
+
+  const currentPkgs = user.purchasedPackages || [];
+  if (!currentPkgs.includes(packageId)) {
+    currentPkgs.push(packageId);
+  }
+
+  const updated = db.users.update(userId, {
+    isVerified: true,
+    status: 'APPROVED',
+    activePackageId: packageId,
+    purchasedPackages: currentPkgs
+  });
+
+  return res.json({
+    success: true,
+    message: `Unlocked ${pkg.name} (₹${pkg.price}) for ${user.fullName} (${user.permanentId})!`,
+    user: updated
+  });
+});
+
+// Admin: Reject / Block User Account
+router.post('/admin/users/:id/reject', authenticateToken, requireAdmin, (req, res) => {
+  const userId = req.params.id;
+  const user = db.users.findById(userId);
+  if (!user) return res.status(404).json({ success: false, message: 'User not found' });
+
+  const updated = db.users.update(userId, { isVerified: false, status: 'REJECTED' });
+  return res.json({ success: true, message: `User ${user.fullName} has been rejected / deactivated.`, user: updated });
+});
+
+// Admin: Delete User Account
+router.delete('/admin/users/:id', authenticateToken, requireAdmin, (req, res) => {
+  const userId = req.params.id;
+  db.users.delete(userId);
+  return res.json({ success: true, message: 'User account removed successfully.' });
+});
+
 // Public System Config (for landing page / public view)
 router.get('/config/public', (req, res) => {
   const settings = db.settings.data[0] || {};

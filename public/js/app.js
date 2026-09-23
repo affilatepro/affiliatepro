@@ -41,7 +41,7 @@ async function fetchPublicConfig() {
   }
 }
 
-// Fetch Packages & Render Cards
+// Fetch Packages & Render Cards with Attractive Visuals & Services
 async function fetchPackages() {
   const container = document.getElementById('packagesContainer');
   if (!container) return;
@@ -51,26 +51,77 @@ async function fetchPackages() {
     const data = await res.json();
     if (!data.success) return;
 
-    container.innerHTML = data.packages.map(pkg => `
-      <div class="pkg-card ${pkg.popular ? 'featured' : ''}">
-        ${pkg.badge ? `<span class="pkg-badge">${pkg.badge}</span>` : ''}
-        <div class="pkg-header">
-          <h3 class="pkg-title">${pkg.name}</h3>
-          <div class="pkg-price-row">
-            <span class="pkg-price">₹${pkg.price}</span>
-            <span class="pkg-old-price">₹${pkg.originalPrice}</span>
+    const tierVisuals = {
+      'pkg_starter_19': { icon: '🚀', gradient: 'linear-gradient(135deg, #10B981 0%, #059669 100%)', leadsCount: '5 Verified Leads', tag: 'STARTER KIT' },
+      'pkg_kickstart_99': { icon: '⚡', gradient: 'linear-gradient(135deg, #3B82F6 0%, #1D4ED8 100%)', leadsCount: '25 Verified Leads', tag: 'POPULAR TIER' },
+      'pkg_silver_299': { icon: '🔮', gradient: 'linear-gradient(135deg, #8B5CF6 0%, #6D28D9 100%)', leadsCount: '75 Verified Leads', tag: 'HIGH EARNER' },
+      'pkg_gold_699': { icon: '👑', gradient: 'linear-gradient(135deg, #F59E0B 0%, #D97706 100%)', leadsCount: '200 Hot Leads', tag: 'PRO MASTER' },
+      'pkg_diamond_1499': { icon: '💎', gradient: 'linear-gradient(135deg, #EC4899 0%, #BE185D 100%)', leadsCount: '500 VIP Leads', tag: 'VIP ELITE' }
+    };
+
+    container.innerHTML = data.packages.map(pkg => {
+      const visual = tierVisuals[pkg.id] || { icon: '⭐', gradient: 'linear-gradient(135deg, #F59E0B, #D97706)', leadsCount: `${pkg.leadsUnlocked || 10} Leads`, tag: 'PRO TIER' };
+
+      return `
+        <div class="pkg-card ${pkg.popular ? 'featured' : ''}" style="border-radius: 20px; overflow: hidden; display: flex; flex-direction: column;">
+          <!-- Visual Banner Header -->
+          <div style="background: ${visual.gradient}; padding: 18px 20px; border-radius: 16px 16px 0 0; position: relative; margin: -28px -22px 20px -22px; color: #fff;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-size: 2rem;">${visual.icon}</span>
+              <span style="background: rgba(0,0,0,0.3); font-size: 0.72rem; font-weight: 800; padding: 4px 10px; border-radius: 999px; text-transform: uppercase; letter-spacing: 0.5px;">${pkg.badge || visual.tag}</span>
+            </div>
+            <h3 style="font-size: 1.4rem; font-weight: 900; margin-top: 6px; color: #fff; text-shadow: 0 2px 4px rgba(0,0,0,0.3);">${pkg.name}</h3>
+            <div style="display: flex; align-items: baseline; gap: 8px; margin-top: 4px;">
+              <span style="font-size: 2rem; font-weight: 900; color: #fff;">₹${pkg.price}</span>
+              <span style="text-decoration: line-through; opacity: 0.75; font-size: 1rem;">₹${pkg.originalPrice}</span>
+              <span style="background: rgba(255,255,255,0.2); font-size: 0.75rem; font-weight: 800; padding: 2px 6px; border-radius: 4px;">SAVE ${Math.round((1 - pkg.price / pkg.originalPrice) * 100)}%</span>
+            </div>
           </div>
-          <span class="pkg-commission-pill">⚡ Earn 60% (₹${pkg.affiliatePayout.toFixed(2)}) / referral</span>
+
+          <!-- Commission Highlight Box -->
+          <div style="background: rgba(16, 185, 129, 0.12); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: 10px; padding: 10px 14px; margin-bottom: 16px; display: flex; align-items: center; gap: 10px;">
+            <span style="font-size: 1.3rem;">💰</span>
+            <div>
+              <div style="font-size: 0.75rem; color: var(--text-dim); text-transform: uppercase; font-weight: 700;">Direct 60% Referral Cash</div>
+              <div style="font-size: 1.1rem; font-weight: 900; color: #10B981;">₹${pkg.affiliatePayout.toFixed(2)} per sale</div>
+            </div>
+          </div>
+
+          <!-- Included Services Infographic -->
+          <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; padding: 14px; margin-bottom: 18px;">
+            <div style="font-size: 0.78rem; font-weight: 800; color: var(--accent-gold); text-transform: uppercase; margin-bottom: 8px; letter-spacing: 0.5px;">
+              🎁 Included Services & Deliverables:
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+              <div style="display: flex; align-items: center; gap: 8px; font-size: 0.85rem;">
+                <span>🔥</span>
+                <span><strong>${visual.leadsCount}</strong> (WhatsApp Click-to-Chat)</span>
+              </div>
+              <div style="display: flex; align-items: center; gap: 8px; font-size: 0.85rem;">
+                <span>🎨</span>
+                <span><strong>100+ Ready Marketing Posters</strong> & Status Pack</span>
+              </div>
+              <div style="display: flex; align-items: center; gap: 8px; font-size: 0.85rem;">
+                <span>📚</span>
+                <span><strong>Step-by-Step Training</strong> (Kaam Kaise Shuru Karein)</span>
+              </div>
+              <div style="display: flex; align-items: center; gap: 8px; font-size: 0.85rem;">
+                <span>⚡</span>
+                <span><strong>Lifetime ID & 1-Click Payouts</strong></span>
+              </div>
+            </div>
+          </div>
+
+          <p class="pkg-desc" style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 16px;">${pkg.description}</p>
+          
+          <div style="margin-top: auto;">
+            <button class="btn btn-primary" style="width: 100%; min-height: 48px; font-weight: 800; font-size: 1rem; border-radius: 12px;" onclick="initiateBuyPackage('${pkg.id}')">
+              ⚡ Unlock Package for ₹${pkg.price}
+            </button>
+          </div>
         </div>
-        <p class="pkg-desc">${pkg.description}</p>
-        <ul class="pkg-features">
-          ${pkg.features.map(f => `<li>${f}</li>`).join('')}
-        </ul>
-        <button class="btn btn-primary" style="width: 100%;" onclick="initiateBuyPackage('${pkg.id}')">
-          Unlock for ₹${pkg.price}
-        </button>
-      </div>
-    `).join('');
+      `;
+    }).join('');
   } catch (err) {
     console.error('Error fetching packages:', err);
   }
