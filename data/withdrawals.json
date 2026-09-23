@@ -1,0 +1,20 @@
+[
+  {
+    "userId": "USR_ROHIT_02",
+    "userPermanentId": "AP-419208",
+    "userName": "Rohit K. Verma",
+    "userPhone": "9876500112",
+    "amount": 100,
+    "paymentType": "UPI",
+    "payoutDetails": {
+      "upiId": "rohit@okhdfcbank"
+    },
+    "status": "PAID",
+    "transactionRef": "UPI_BANK_TX_9876543210",
+    "createdAt": "2026-09-23T06:34:22.394Z",
+    "id": "ID_oa5rtmiqdmudq9ooq",
+    "updatedAt": "2026-09-23T06:34:22.400Z",
+    "paidAt": "2026-09-23T06:34:22.400Z",
+    "approvedBy": "Master Administrator"
+  }
+]

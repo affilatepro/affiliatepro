@@ -1,0 +1,132 @@
+[
+  {
+    "permanentId": "AP-549291",
+    "fullName": "Ajay Kumar",
+    "email": "ajay1790146986646@gmail.com",
+    "phone": "9772929238",
+    "passwordHash": "$2b$10$2mMlnIfE/HbwUkLMTTjJWeq41fGXQCDa0L2bhAAPi.Czbks8PT51O",
+    "role": "user",
+    "walletBalance": 0,
+    "totalEarned": 0,
+    "totalWithdrawn": 0,
+    "purchasedPackages": [
+      "pkg_starter_19"
+    ],
+    "activePackageId": "pkg_starter_19",
+    "referredBy": "AP-419208",
+    "referralCount": 0,
+    "isVerified": true,
+    "lastSpinDate": null,
+    "id": "ID_nlkzmzpm2mudran8e",
+    "createdAt": "2026-09-23T07:03:06.782Z",
+    "updatedAt": "2026-09-23T07:03:06.824Z"
+  },
+  {
+    "permanentId": "AP-337003",
+    "fullName": "Vikas",
+    "email": "ani@gmail.com",
+    "phone": "9914808722",
+    "passwordHash": "$2b$10$dN/M7A3B63neCFjLVUb9tutL0srvw07NRVJSORC.gaAOnJ7xqIdB6",
+    "role": "user",
+    "walletBalance": 0,
+    "totalEarned": 0,
+    "totalWithdrawn": 0,
+    "purchasedPackages": [
+      "pkg_starter_19"
+    ],
+    "activePackageId": "pkg_starter_19",
+    "referredBy": "AP-ADMIN99",
+    "referralCount": 0,
+    "isVerified": true,
+    "lastSpinDate": null,
+    "id": "ID_xh8w9zrpamudqrof5",
+    "createdAt": "2026-09-23T06:48:21.857Z",
+    "updatedAt": "2026-09-23T06:49:32.065Z"
+  },
+  {
+    "permanentId": "AP-240789",
+    "fullName": "vikas",
+    "email": "vikas@gmail.com",
+    "phone": "9914808735",
+    "passwordHash": "$2b$10$nwkJYSlwjFy3p0gzOIUMweFDnZmcaITJv8bIqD.qKtEC6Y8/E7NKC",
+    "role": "user",
+    "walletBalance": 2,
+    "totalEarned": 2,
+    "totalWithdrawn": 0,
+    "purchasedPackages": [
+      "pkg_starter_19"
+    ],
+    "activePackageId": "pkg_starter_19",
+    "referredBy": null,
+    "referralCount": 0,
+    "isVerified": true,
+    "lastSpinDate": "2026-09-23",
+    "id": "ID_p8b77fvkamudqgqaz",
+    "createdAt": "2026-09-23T06:39:51.083Z",
+    "updatedAt": "2026-09-23T06:46:30.756Z"
+  },
+  {
+    "permanentId": "AP-297929",
+    "fullName": "Karan Mehra",
+    "email": "partner_1790145261928@gmail.com",
+    "phone": "9863117281",
+    "passwordHash": "$2b$10$nTrfcEidyzPUcgBvneBXsOFyVo.AcH1f5ENYsao471cSW5A5.13ay",
+    "role": "user",
+    "walletBalance": 0,
+    "totalEarned": 0,
+    "totalWithdrawn": 0,
+    "purchasedPackages": [
+      "pkg_silver_299"
+    ],
+    "activePackageId": "pkg_silver_299",
+    "referredBy": "AP-419208",
+    "referralCount": 0,
+    "isVerified": true,
+    "lastSpinDate": null,
+    "id": "ID_l0l8cf6rjmudq9oj7",
+    "createdAt": "2026-09-23T06:34:22.195Z",
+    "updatedAt": "2026-09-23T06:34:22.293Z"
+  },
+  {
+    "id": "USR_ROHIT_02",
+    "permanentId": "AP-419208",
+    "fullName": "Rohit K. Verma",
+    "phone": "9876500112",
+    "email": "rohit.earner@gmail.com",
+    "passwordHash": "$2b$10$GlGjkvuH2tVc3hYPBs9bF.5C9Nd45PxFsaVGBvE8/uaBOWtyMHNRe",
+    "role": "user",
+    "walletBalance": 4941.2,
+    "totalEarned": 25080.8,
+    "totalWithdrawn": 20100,
+    "purchasedPackages": [
+      "pkg_diamond_1499"
+    ],
+    "activePackageId": "pkg_diamond_1499",
+    "referredBy": "AP-ADMIN99",
+    "referralCount": 44,
+    "isVerified": true,
+    "createdAt": "2026-09-23T06:32:28.043Z",
+    "updatedAt": "2026-09-23T07:03:06.826Z"
+  },
+  {
+    "id": "USR_ADMIN_01",
+    "permanentId": "AP-ADMIN99",
+    "fullName": "Master Administrator",
+    "phone": "9876543210",
+    "email": "admin@affiliateempire.in",
+    "passwordHash": "$2b$10$xckjNe2iP0jy6AkDKVJET.qDcmRxasxpGK2hlFQRHzkdq9f3TrsD.",
+    "role": "admin",
+    "walletBalance": 11.4,
+    "totalEarned": 11.4,
+    "totalWithdrawn": 0,
+    "purchasedPackages": [
+      "pkg_diamond_1499"
+    ],
+    "activePackageId": "pkg_diamond_1499",
+    "referredBy": null,
+    "referralCount": 1,
+    "isVerified": true,
+    "createdAt": "2026-09-23T06:32:27.974Z",
+    "updatedAt": "2026-09-23T06:49:32.067Z"
+  }
+]

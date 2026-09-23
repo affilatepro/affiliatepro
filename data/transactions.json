@@ -1,0 +1,59 @@
+[
+  {
+    "userId": "USR_ROHIT_02",
+    "userPermanentId": "AP-419208",
+    "type": "REFERRAL_COMMISSION_60",
+    "amount": 11.4,
+    "description": "60% Affiliate Commission from Ajay Kumar (Starter Pass)",
+    "orderId": "ORD_355831_MUDRAN8X",
+    "buyerId": "AP-549291",
+    "createdAt": "2026-09-23T07:03:06.827Z",
+    "id": "ID_y9mg1k9qcmudran9n",
+    "updatedAt": "2026-09-23T07:03:06.827Z"
+  },
+  {
+    "userId": "USR_ADMIN_01",
+    "userPermanentId": "AP-ADMIN99",
+    "type": "REFERRAL_COMMISSION_60",
+    "amount": 11.4,
+    "description": "60% Affiliate Commission from Vikas (Starter Pass)",
+    "orderId": "ORD_516373_MUDQRV6B",
+    "buyerId": "AP-337003",
+    "createdAt": "2026-09-23T06:49:32.068Z",
+    "id": "ID_r1vg2yosqmudqt6lg",
+    "updatedAt": "2026-09-23T06:49:32.068Z"
+  },
+  {
+    "userId": "ID_p8b77fvkamudqgqaz",
+    "userPermanentId": "AP-240789",
+    "type": "SPIN_REWARD",
+    "amount": 2,
+    "description": "Daily Spin & Win Bonus: ₹2 Wallet Bonus",
+    "createdAt": "2026-09-23T06:42:20.783Z",
+    "id": "ID_in72rmsjtmudqjxtb",
+    "updatedAt": "2026-09-23T06:42:20.783Z"
+  },
+  {
+    "userId": "USR_ROHIT_02",
+    "userPermanentId": "AP-419208",
+    "type": "WITHDRAWAL_REQUEST",
+    "amount": -100,
+    "description": "Withdrawal Request of ₹100 via UPI",
+    "withdrawalId": "ID_oa5rtmiqdmudq9ooq",
+    "createdAt": "2026-09-23T06:34:22.395Z",
+    "id": "ID_nfx5s60knmudq9oor",
+    "updatedAt": "2026-09-23T06:34:22.395Z"
+  },
+  {
+    "userId": "USR_ROHIT_02",
+    "userPermanentId": "AP-419208",
+    "type": "REFERRAL_COMMISSION_60",
+    "amount": 179.4,
+    "description": "60% Affiliate Commission from Karan Mehra (Silver Growth Funnel)",
+    "orderId": "ORD_242914_MUDQ9OJM",
+    "buyerId": "AP-297929",
+    "createdAt": "2026-09-23T06:34:22.295Z",
+    "id": "ID_0ndu2j85rmudq9olz",
+    "updatedAt": "2026-09-23T06:34:22.295Z"
+  }
+]

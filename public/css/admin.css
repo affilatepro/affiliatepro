@@ -1,0 +1,161 @@
+.admin-container {
+  display: flex;
+  min-height: 100vh;
+  background: #090e17;
+}
+
+.admin-sidebar {
+  width: 260px;
+  background: #0d131f;
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  flex-direction: column;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+}
+
+.admin-badge {
+  background: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  font-size: 0.75rem;
+  padding: 4px 10px;
+  border-radius: var(--radius-sm);
+  font-weight: 800;
+  display: inline-block;
+  margin-top: 6px;
+}
+
+.admin-main {
+  flex-grow: 1;
+  padding: 28px 36px;
+  overflow-y: auto;
+  max-width: 1400px;
+}
+
+/* Revenue Split Highlight Card */
+.revenue-split-card {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(245, 158, 11, 0.1) 100%);
+  border: 1px solid var(--border-highlight);
+  border-radius: var(--radius-lg);
+  padding: 24px 28px;
+  margin-bottom: 28px;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 20px;
+}
+
+.revenue-box h5 {
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  text-transform: uppercase;
+}
+
+.revenue-box .sum {
+  font-size: 2rem;
+  font-weight: 900;
+  margin-top: 4px;
+}
+
+.sum.platform { color: var(--accent-gold); }
+.sum.affiliates { color: var(--accent-green); }
+.sum.gross { color: #fff; }
+
+/* Admin Data Tables */
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  margin-top: 16px;
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 0.9rem;
+}
+
+.admin-table th {
+  background: rgba(255, 255, 255, 0.03);
+  padding: 14px 18px;
+  font-weight: 700;
+  color: var(--text-muted);
+  border-bottom: 1px solid var(--border-color);
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.5px;
+}
+
+.admin-table td {
+  padding: 14px 18px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  color: #fff;
+}
+
+.admin-table tr:hover td {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.status-tag {
+  font-size: 0.75rem;
+  font-weight: 800;
+  padding: 4px 8px;
+  border-radius: 4px;
+  display: inline-block;
+}
+
+.status-tag.approved, .status-tag.paid {
+  background: rgba(16, 185, 129, 0.15);
+  color: var(--accent-green);
+}
+
+.status-tag.pending, .status-tag.pending_verification {
+  background: rgba(245, 158, 11, 0.15);
+  color: var(--accent-gold);
+}
+
+.status-tag.rejected {
+  background: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-approve {
+  background: #10B981;
+  color: #000;
+  font-weight: 700;
+  border: none;
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: 0.8rem;
+  transition: var(--transition);
+}
+
+.btn-approve:hover {
+  background: #059669;
+}
+
+.btn-reject {
+  background: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: 0.8rem;
+  transition: var(--transition);
+}
+
+.btn-reject:hover {
+  background: #ef4444;
+  color: #fff;
+}

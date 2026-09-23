@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AffiliateEmpire Bharat | India's #1 60% Commission Affiliate Network</title>
+  <meta name="description" content="Start your affiliate business from just ₹19 and earn 60% direct commission on every referral. Instant UPI withdrawals and verified hot buyer leads included.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Announcement Bar -->
+  <div class="announcement-bar" id="announcementText">
+    🔥 Special Launch Offer: Earn Flat 60% Direct Commission on Packages from ₹19 to ₹1499! Instant UPI Withdrawals Active!
+  </div>
+
+  <!-- Navbar -->
+  <header class="navbar">
+    <a href="/" class="brand">
+      <div class="brand-icon">👑</div>
+      <div class="brand-text">
+        <h1>Affiliate<span>Empire</span></h1>
+      </div>
+      <span class="brand-badge">BHARAT 2.0</span>
+    </a>
+
+    <nav class="nav-links">
+      <a href="#calculator">Earning Calculator</a>
+      <a href="#packages">Packages (₹19 - ₹1499)</a>
+      <a href="#leads-preview">Hot Leads Hub</a>
+      <a href="#leaderboard">Leaderboard</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+
+    <div class="nav-actions">
+      <button class="btn btn-outline" onclick="openAuthModal('login')">Log In</button>
+      <button class="btn btn-primary" onclick="openAuthModal('register')">Register Now (Free ID)</button>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-pill">
+      <span>⚡ 60% Affiliate Commission • Instant UPI Payouts • Hot WhatsApp Leads</span>
+    </div>
+    <h1 class="hero-title">
+      Start Your Mobile Affiliate Business from Just <span class="highlight">₹19</span> & Earn <span class="highlight">60% Cash</span> Daily!
+    </h1>
+    <p class="hero-subtitle">
+      Get a permanent Affiliate ID, high-converting digital products from ₹19 to ₹1499, and a live pool of verified buyer contacts to chat directly on WhatsApp and close sales.
+    </p>
+
+    <div class="hero-cta">
+      <button class="btn btn-primary btn-lg" onclick="openAuthModal('register')">
+        🚀 Create Permanent ID & Start Now
+      </button>
+      <a href="#packages" class="btn btn-outline btn-lg">
+        📦 Explore Packages (₹19 - ₹1499)
+      </a>
+    </div>
+
+    <div class="hero-trust-badges">
+      <span>🛡️ 100% Genuine Platform</span>
+      <span>⚡ 60% Direct Referral Split</span>
+      <span>📱 1-Click WhatsApp Lead Outreach</span>
+      <span>💸 Minimum ₹50 UPI Withdrawal</span>
+    </div>
+  </section>
+
+  <!-- Interactive 60% Commission Calculator -->
+  <section class="calc-section" id="calculator">
+    <div class="calc-card">
+      <div class="calc-header">
+        <span class="section-tag">PROFIT PREDICTOR</span>
+        <h3>Calculate Your 60% Affiliate Earnings</h3>
+        <p style="color: var(--text-muted); font-size: 0.9rem;">Slide below to calculate your daily & monthly passive income potential</p>
+      </div>
+
+      <div class="calc-grid">
+        <div class="calc-inputs">
+          <div class="slider-group">
+            <label>
+              Average Package Sold: <span id="calcPkgPriceDisplay">₹299 (Silver Growth)</span>
+            </label>
+            <input type="range" id="pkgPriceSlider" min="19" max="1499" value="299" step="10" class="slider" oninput="updateCalculator()">
+          </div>
+
+          <div class="slider-group">
+            <label>
+              Referrals / Sales Per Day: <span id="calcSalesDisplay">5 Buyers</span>
+            </label>
+            <input type="range" id="salesSlider" min="1" max="50" value="5" class="slider" oninput="updateCalculator()">
+          </div>
+
+          <div style="background: rgba(255,255,255,0.03); padding: 12px; border-radius: 8px; font-size: 0.85rem; color: var(--text-dim);">
+            💡 <strong>Smart Split:</strong> On every sale, you get <strong>60%</strong> directly in your wallet, and 40% covers platform server & lead acquisition.
+          </div>
+        </div>
+
+        <div class="calc-output">
+          <div class="calc-output-title">Your Estimated Monthly Income</div>
+          <div class="calc-output-amount" id="monthlyEarnings">₹26,910</div>
+          
+          <div class="calc-output-split">
+            <div>
+              <span>Daily Payout (60%)</span>
+              <strong id="dailyEarnings" style="color: var(--accent-green);">₹897/day</strong>
+            </div>
+            <div>
+              <span>Commission Per Sale</span>
+              <strong id="commissionPerSale" style="color: var(--accent-gold);">₹179.40</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Packages Section -->
+  <section class="packages-section" id="packages">
+    <div class="section-header">
+      <span class="section-tag">AFFILIATE TIERS</span>
+      <h2 class="section-title">Select Your Digital Starter Package</h2>
+      <p style="color: var(--text-muted); max-width: 600px; margin: 8px auto;">
+        Low entry barriers, massive return on investment. Product remains locked until payment is verified via UPI QR or Gateway.
+      </p>
+    </div>
+
+    <div class="packages-grid" id="packagesContainer">
+      <!-- Dynamically populated from API -->
+    </div>
+  </section>
+
+  <!-- Hot Leads & WhatsApp Hub Showcase -->
+  <section class="calc-section" id="leads-preview">
+    <div class="calc-card" style="border-color: rgba(16, 185, 129, 0.4);">
+      <div class="calc-header">
+        <span class="section-tag" style="color: var(--accent-green);">UNIQUE FEATURE</span>
+        <h3>🔥 Smart Hot Leads Hub with 1-Click WhatsApp Chat</h3>
+        <p style="color: var(--text-muted); max-width: 650px; margin: 0 auto;">
+          Never worry about finding customers! Inside your dashboard, access verified contacts of students, freelancers, and marketers looking to earn online with pre-made closing scripts.
+        </p>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin-top: 24px;">
+        <div style="background: rgba(0,0,0,0.3); padding: 18px; border-radius: 12px; border: 1px solid var(--border-color);">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <strong style="color: #fff;">Rahul S. (Jaipur)</strong>
+            <span style="background: rgba(16,185,129,0.15); color: #10b981; font-size: 0.75rem; padding: 2px 6px; border-radius: 4px; font-weight: 700;">96% Intent</span>
+          </div>
+          <p style="font-size: 0.8rem; color: var(--text-dim); margin-bottom: 12px;">Looking for Work From Home Affiliate Systems</p>
+          <button class="btn btn-success btn-sm" style="width: 100%;" onclick="openAuthModal('register')">💬 1-Click WhatsApp Connect</button>
+        </div>
+
+        <div style="background: rgba(0,0,0,0.3); padding: 18px; border-radius: 12px; border: 1px solid var(--border-color);">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <strong style="color: #fff;">Priya V. (Indore)</strong>
+            <span style="background: rgba(16,185,129,0.15); color: #10b981; font-size: 0.75rem; padding: 2px 6px; border-radius: 4px; font-weight: 700;">92% Intent</span>
+          </div>
+          <p style="font-size: 0.8rem; color: var(--text-dim); margin-bottom: 12px;">Interested in ₹19 - ₹299 starter packages</p>
+          <button class="btn btn-success btn-sm" style="width: 100%;" onclick="openAuthModal('register')">💬 1-Click WhatsApp Connect</button>
+        </div>
+
+        <div style="background: rgba(0,0,0,0.3); padding: 18px; border-radius: 12px; border: 1px solid var(--border-color);">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <strong style="color: #fff;">Amit P. (Ahmedabad)</strong>
+            <span style="background: rgba(245,158,11,0.15); color: #f59e0b; font-size: 0.75rem; padding: 2px 6px; border-radius: 4px; font-weight: 700;">VIP Buyer</span>
+          </div>
+          <p style="font-size: 0.8rem; color: var(--text-dim); margin-bottom: 12px;">High Budget Digital Marketer</p>
+          <button class="btn btn-success btn-sm" style="width: 100%;" onclick="openAuthModal('register')">💬 1-Click WhatsApp Connect</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Live Leaderboard Section -->
+  <section class="packages-section" id="leaderboard">
+    <div class="section-header">
+      <span class="section-tag">TOP EARNERS</span>
+      <h2 class="section-title">Live Affiliate Hall of Fame</h2>
+      <p style="color: var(--text-muted);">Real members earning 60% direct commissions every single day</p>
+    </div>
+
+    <div style="max-width: 800px; margin: 0 auto; background: var(--bg-card); border-radius: var(--radius-lg); border: 1px solid var(--border-color); overflow: hidden;">
+      <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.95rem;">
+        <thead style="background: rgba(255,255,255,0.03); border-bottom: 1px solid var(--border-color);">
+          <tr>
+            <th style="padding: 14px 20px; color: var(--text-muted);">Rank</th>
+            <th style="padding: 14px 20px; color: var(--text-muted);">Affiliate Name</th>
+            <th style="padding: 14px 20px; color: var(--text-muted);">Permanent ID</th>
+            <th style="padding: 14px 20px; color: var(--text-muted); text-align: right;">Total Payout (60%)</th>
+          </tr>
+        </thead>
+        <tbody id="leaderboardBody">
+          <!-- Dynamically populated -->
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- FAQ Section -->
+  <section class="packages-section" id="faq">
+    <div class="section-header">
+      <span class="section-tag">FREQUENTLY ASKED QUESTIONS</span>
+      <h2 class="section-title">Everything You Need To Know</h2>
+    </div>
+
+    <div style="max-width: 800px; margin: 0 auto; display: flex; flex-direction: column; gap: 14px;">
+      <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 20px;">
+        <h4 style="color: #fff; margin-bottom: 6px;">1. Permanent User ID kaise milti hai?</h4>
+        <p style="color: var(--text-muted); font-size: 0.9rem;">Jaise hi aap Free Register karte hain, system aapko ek unique permanent ID (jaise AP-784210) allot kar deta hai jo lifetime aapki rehti hai.</p>
+      </div>
+
+      <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 20px;">
+        <h4 style="color: #fff; margin-bottom: 6px;">2. Payment kab aur kaise verify hoti hai?</h4>
+        <p style="color: var(--text-muted); font-size: 0.9rem;">Aap UPI QR code scan karke PhonePe, GPay ya Paytm se pay karte hain aur apna 12-digit UTR submit karte hain. Payment verify hote hi package turant unlock ho jata hai.</p>
+      </div>
+
+      <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 20px;">
+        <h4 style="color: #fff; margin-bottom: 6px;">3. 60% Commission kaise milta hai?</h4>
+        <p style="color: var(--text-muted); font-size: 0.9rem;">Jab bhi koi user aapke referral link se koi bhi package buy karta hai, us package amount ka 60% direct aapke wallet me add ho jata hai jise aap UPI ID ya Bank Account me withdraw kar sakte hain (Min ₹50).</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Auth Modal (Login / Register) -->
+  <div class="modal-overlay" id="authModal">
+    <div class="modal-box">
+      <button class="modal-close" onclick="closeAuthModal()">&times;</button>
+      
+      <div id="registerFormBox">
+        <h3 style="font-size: 1.5rem; font-weight: 800; margin-bottom: 6px;">Create Free Account</h3>
+        <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 20px;">Get your permanent ID & start earning 60% commission</p>
+
+        <form id="registerForm" onsubmit="handleRegister(event)">
+          <div class="form-group">
+            <label>Full Name</label>
+            <input type="text" id="regName" class="form-control" placeholder="e.g. Rahul Sharma" required>
+          </div>
+
+          <div class="form-group">
+            <label>Mobile Number (WhatsApp Active)</label>
+            <input type="tel" id="regPhone" class="form-control" placeholder="10-digit phone number" pattern="[0-9]{10}" required>
+          </div>
+
+          <div class="form-group">
+            <label>Email Address</label>
+            <input type="email" id="regEmail" class="form-control" placeholder="name@gmail.com" required>
+          </div>
+
+          <div class="form-group">
+            <label>Password</label>
+            <input type="password" id="regPassword" class="form-control" placeholder="Create a secure password" minlength="4" required>
+          </div>
+
+          <div class="form-group">
+            <label>Referral Code (Optional)</label>
+            <input type="text" id="regReferralCode" class="form-control" placeholder="e.g. AP-419208">
+          </div>
+
+          <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 10px;" id="regSubmitBtn">
+            Register & Get Permanent ID
+          </button>
+        </form>
+
+        <p style="text-align: center; color: var(--text-dim); font-size: 0.85rem; margin-top: 16px;">
+          Already have an account? <a href="javascript:void(0)" onclick="switchAuthView('login')" style="color: var(--accent-gold); font-weight: 700;">Login here</a>
+        </p>
+      </div>
+
+      <div id="loginFormBox" style="display: none;">
+        <h3 style="font-size: 1.5rem; font-weight: 800; margin-bottom: 6px;">Affiliate Login</h3>
+        <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 20px;">Enter your Email, Phone or Permanent ID</p>
+
+        <form id="loginForm" onsubmit="handleLogin(event)">
+          <div class="form-group">
+            <label>Email / Phone / Permanent ID</label>
+            <input type="text" id="loginIdentifier" class="form-control" placeholder="AP-XXXXXX or email or phone" required>
+          </div>
+
+          <div class="form-group">
+            <label>Password</label>
+            <input type="password" id="loginPassword" class="form-control" placeholder="Your password" required>
+          </div>
+
+          <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 10px;" id="loginSubmitBtn">
+            Log In to Dashboard
+          </button>
+        </form>
+
+        <p style="text-align: center; color: var(--text-dim); font-size: 0.85rem; margin-top: 16px;">
+          Don't have an account? <a href="javascript:void(0)" onclick="switchAuthView('register')" style="color: var(--accent-gold); font-weight: 700;">Create free account</a>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Live Payout Popup Ticker -->
+  <div class="live-payout-ticker" id="payoutToast">
+    <div class="payout-icon">💸</div>
+    <div class="payout-info">
+      <h5 id="toastUser">Rohit V. (AP-419208)</h5>
+      <p id="toastDetail">Received ₹899.40 (60% Commission)</p>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,177 @@
+[
+  {
+    "id": "pkg_diamond_1499",
+    "name": "Diamond VIP Elite",
+    "price": 1499,
+    "originalPrice": 4999,
+    "tag": "Ultimate Dominance",
+    "badge": "VIP ELITE",
+    "color": "#EC4899",
+    "description": "Complete commercial affiliate license, unlimited lead access & 1-on-1 blueprint.",
+    "commissionRate": 60,
+    "affiliatePayout": 899.4,
+    "platformFee": 599.6,
+    "leadsUnlocked": 1000,
+    "features": [
+      "Full Unrestricted Commercial Affiliate License",
+      "Unlimited & Continuous Hot Buyer Lead Stream",
+      "Instant Same-Day VIP Auto-Withdrawals",
+      "1-on-1 Personalized Marketing Action Plan",
+      "VIP Gold Crown Badge on Dashboard & Leaderboard",
+      "Direct Dedicated VIP Telegram & WhatsApp Manager"
+    ],
+    "downloads": [
+      {
+        "title": "VIP Diamond Millionaire Mastermind Toolkit",
+        "size": "45 MB"
+      },
+      {
+        "title": "Exclusive Influencer Automation Bot Setup",
+        "size": "18 MB"
+      }
+    ],
+    "popular": false,
+    "createdAt": "2026-09-23T06:32:27.905Z",
+    "updatedAt": "2026-09-23T06:32:27.905Z"
+  },
+  {
+    "id": "pkg_gold_699",
+    "name": "Gold Mastery",
+    "price": 699,
+    "originalPrice": 1999,
+    "tag": "Pro Marketer",
+    "badge": "HIGH EARNER",
+    "color": "#F59E0B",
+    "description": "Autonomous marketing system with high conversion rate and bulk buyer data.",
+    "commissionRate": 60,
+    "affiliatePayout": 419.4,
+    "platformFee": 279.6,
+    "leadsUnlocked": 350,
+    "features": [
+      "All Silver Growth Benefits",
+      "350 Verified Direct WhatsApp Buyer Contacts",
+      "Done-For-You Daily WhatsApp Status Creatives",
+      "Psychological Objection Handling Scripts",
+      "Priority 2-Hour Wallet Withdrawals",
+      "Leaderboard Earning Multiplier Boost"
+    ],
+    "downloads": [
+      {
+        "title": "High-Ticket Closing Audio Scripts Vault",
+        "size": "22 MB"
+      },
+      {
+        "title": "Ready-Made 365 Days Content Calendar",
+        "size": "5 MB"
+      }
+    ],
+    "popular": false,
+    "createdAt": "2026-09-23T06:32:27.905Z",
+    "updatedAt": "2026-09-23T06:32:27.905Z"
+  },
+  {
+    "id": "pkg_silver_299",
+    "name": "Silver Growth Funnel",
+    "price": 299,
+    "originalPrice": 999,
+    "tag": "High ROI",
+    "badge": "BEST VALUE",
+    "color": "#8B5CF6",
+    "description": "Comprehensive video training + targeted high-budget buyer leads.",
+    "commissionRate": 60,
+    "affiliatePayout": 179.4,
+    "platformFee": 119.6,
+    "leadsUnlocked": 120,
+    "features": [
+      "All Kickstart Pro Benefits",
+      "120 Premium Buyer Leads with City & Intent Data",
+      "Complete Affiliate Funnel Landing Page Templates",
+      "FB Ads & Google Ads Zero-Budget Growth Hacks",
+      "Weekly Live Strategy Q&A Recordings",
+      "Priority WhatsApp Helpdesk"
+    ],
+    "downloads": [
+      {
+        "title": "Full Funnel Blueprint & Landing Page ZIP",
+        "size": "14.0 MB"
+      },
+      {
+        "title": "Zero-Budget Organic Traffic Vault",
+        "size": "9.3 MB"
+      }
+    ],
+    "popular": false,
+    "createdAt": "2026-09-23T06:32:27.904Z",
+    "updatedAt": "2026-09-23T06:32:27.904Z"
+  },
+  {
+    "id": "pkg_kickstart_99",
+    "name": "Kickstart Pro",
+    "price": 99,
+    "originalPrice": 499,
+    "tag": "Fast Track",
+    "badge": "POPULAR",
+    "color": "#3B82F6",
+    "description": "Accelerated marketing kit with proven conversion funnels.",
+    "commissionRate": 60,
+    "affiliatePayout": 59.4,
+    "platformFee": 39.6,
+    "leadsUnlocked": 40,
+    "features": [
+      "All Starter Pass Features",
+      "40 Verified Hot Buyer Leads",
+      "Instagram Reel & Story High-Converting Video Hooks",
+      "Automated WhatsApp Follow-Up Copy Blueprint",
+      "Direct Access to Community Support",
+      "Fast-Track Withdrawal Processing"
+    ],
+    "downloads": [
+      {
+        "title": "Viral Reel Mastery & Canva Templates Pack",
+        "size": "4.5 MB"
+      },
+      {
+        "title": "WhatsApp DM Closing Masterclass Audio",
+        "size": "8.2 MB"
+      }
+    ],
+    "popular": true,
+    "createdAt": "2026-09-23T06:32:27.904Z",
+    "updatedAt": "2026-09-23T06:32:27.904Z"
+  },
+  {
+    "id": "pkg_starter_19",
+    "name": "Starter Pass",
+    "price": 19,
+    "originalPrice": 199,
+    "tag": "Instant Entry",
+    "badge": "MICRO BOOST",
+    "color": "#10B981",
+    "description": "Entry-level affiliate license with starter marketing toolkit.",
+    "commissionRate": 60,
+    "affiliatePayout": 11.4,
+    "platformFee": 7.6,
+    "leadsUnlocked": 10,
+    "features": [
+      "Permanent Affiliate ID & Unique Referral Link",
+      "60% Lifetime Referral Commission",
+      "10 Hot Buyer Leads with WhatsApp Numbers",
+      "Basic WhatsApp & Social Promo Templates",
+      "Access to Basic Affiliate Training Hub",
+      "Standard Wallet & Withdrawal Support"
+    ],
+    "downloads": [
+      {
+        "title": "Affiliate Marketing Quickstart Guide (PDF)",
+        "size": "1.2 MB"
+      },
+      {
+        "title": "Top 50 High-Converting WhatsApp Message Scripts",
+        "size": "0.8 MB"
+      }
+    ],
+    "popular": false,
+    "createdAt": "2026-09-23T06:32:27.896Z",
+    "updatedAt": "2026-09-23T06:32:27.902Z"
+  }
+]
