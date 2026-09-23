@@ -17,6 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
   loadLeads();
   loadWallet();
   loadLeaderboard();
+  init100PostersStudio();
 
   // Check if redirected to buy package
   const urlParams = new URLSearchParams(window.location.search);
@@ -108,6 +109,9 @@ function renderDownlineTeam(stats) {
   `).join('');
 }
 
+let currentPosterTheme = 'gold';
+let currentSelectedTemplate = null;
+
 // Load Packages into Dashboard Store
 async function loadPackages() {
   const container = document.getElementById('dashboardPackagesGrid');
@@ -118,14 +122,14 @@ async function loadPackages() {
     const data = await res.json();
     if (!data.success) return;
 
-    const userPkgs = (currentUser && currentUser.purchasedPackages) || [];
+    const activePkgId = currentUser && currentUser.activePackageId;
 
     container.innerHTML = data.packages.map(pkg => {
-      const isPurchased = userPkgs.includes(pkg.id);
+      const isActive = activePkgId === pkg.id;
       return `
-        <div class="pkg-card ${isPurchased ? 'featured' : ''}" style="${isPurchased ? 'border-color: #10B981;' : ''}">
-          <span class="pkg-badge" style="background: ${isPurchased ? '#10B981' : 'var(--accent-gold-gradient)'}; color: ${isPurchased ? '#fff' : '#000'};">
-            ${isPurchased ? 'ACTIVE / UNLOCKED' : pkg.badge}
+        <div class="pkg-card ${isActive ? 'featured' : ''}" style="${isActive ? 'border-color: #10B981; box-shadow: 0 0 25px rgba(16,185,129,0.3);' : ''}">
+          <span class="pkg-badge" style="background: ${isActive ? '#10B981' : 'var(--accent-gold-gradient)'}; color: ${isActive ? '#fff' : '#000'};">
+            ${isActive ? '✓ ACTIVE TIER' : pkg.badge}
           </span>
           <div class="pkg-header">
             <h3 class="pkg-title">${pkg.name}</h3>
@@ -133,18 +137,18 @@ async function loadPackages() {
               <span class="pkg-price">₹${pkg.price}</span>
               <span class="pkg-old-price">₹${pkg.originalPrice}</span>
             </div>
-            <span class="pkg-commission-pill">⚡ 60% Referral Split: ₹${pkg.affiliatePayout.toFixed(2)}</span>
+            <span class="pkg-commission-pill">⚡ 60% Referral Cash: ₹${pkg.affiliatePayout.toFixed(2)}</span>
           </div>
           <p class="pkg-desc">${pkg.description}</p>
           <ul class="pkg-features">
             ${pkg.features.map(f => `<li>${f}</li>`).join('')}
           </ul>
-          ${isPurchased ? `
-            <button class="btn btn-success" style="width: 100%;" disabled>
-              ✓ Unlocked & Active
+          ${isActive ? `
+            <button class="btn btn-success" style="width: 100%; font-weight: 800;" disabled>
+              ✓ Currently Active
             </button>
           ` : `
-            <button class="btn btn-primary" style="width: 100%;" onclick="initiateBuyPackage('${pkg.id}')">
+            <button class="btn btn-primary" style="width: 100%; font-weight: 800;" onclick="initiateBuyPackage('${pkg.id}')">
               ⚡ Unlock for ₹${pkg.price}
             </button>
           `}
@@ -154,6 +158,201 @@ async function loadPackages() {
   } catch (err) {
     console.error('Error loading packages:', err);
   }
+}
+
+// 100+ Poster Studio Engine
+function init100PostersStudio() {
+  render100PostersList('All');
+  if (window.PROMO_TEMPLATES_100 && window.PROMO_TEMPLATES_100.length > 0) {
+    currentSelectedTemplate = window.PROMO_TEMPLATES_100[0];
+    generateMarketingPoster(currentSelectedTemplate);
+  }
+}
+
+function filterPosterCategory(cat) {
+  document.querySelectorAll('[id^="cat"]').forEach(b => b.classList.remove('active'));
+  const btnMap = {
+    'All': 'catAllBtn',
+    'WhatsApp Status': 'catWaBtn',
+    'Instagram Story': 'catInstaBtn',
+    'Hindi Viral': 'catHindiBtn',
+    'Sales Pitch': 'catSalesBtn'
+  };
+  if (btnMap[cat]) {
+    const el = document.getElementById(btnMap[cat]);
+    if (el) el.classList.add('active');
+  }
+  render100PostersList(cat);
+}
+
+function render100PostersList(cat) {
+  const container = document.getElementById('postersGridContainer');
+  if (!container || !window.PROMO_TEMPLATES_100) return;
+
+  const filtered = cat === 'All' 
+    ? window.PROMO_TEMPLATES_100 
+    : window.PROMO_TEMPLATES_100.filter(t => t.cat === cat);
+
+  container.innerHTML = filtered.map(item => `
+    <div style="background: rgba(0,0,0,0.35); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 14px; transition: var(--transition);" class="poster-item-card" onclick="selectPosterTemplate(${item.id})">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+        <span style="font-weight: 800; font-size: 0.85rem; color: var(--accent-gold);">#${item.id} • ${item.title}</span>
+        <span style="font-size: 0.7rem; color: var(--text-dim); background: rgba(255,255,255,0.06); padding: 2px 6px; border-radius: 4px;">${item.cat}</span>
+      </div>
+      <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 8px; line-height: 1.4;">${item.text.replace('[LINK]', `${window.location.origin}/?ref=${currentUser ? currentUser.permanentId : 'ID'}`)}</p>
+      <div style="display: flex; gap: 8px;">
+        <button class="btn btn-outline btn-sm" style="font-size: 0.75rem; padding: 4px 10px;" onclick="event.stopPropagation(); copyCustomPromoScript('${encodeURIComponent(item.text)}')">📋 Copy Script</button>
+        <button class="btn btn-primary btn-sm" style="font-size: 0.75rem; padding: 4px 10px;" onclick="event.stopPropagation(); selectPosterTemplate(${item.id})">👁️ Preview Poster</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function selectPosterTemplate(id) {
+  if (!window.PROMO_TEMPLATES_100) return;
+  const tmpl = window.PROMO_TEMPLATES_100.find(t => t.id === id);
+  if (tmpl) {
+    currentSelectedTemplate = tmpl;
+    generateMarketingPoster(tmpl);
+  }
+}
+
+function setPosterTheme(theme) {
+  currentPosterTheme = theme;
+  document.querySelectorAll('[id^="theme"]').forEach(b => b.classList.remove('active'));
+  const btnMap = {
+    'gold': 'themeGoldBtn',
+    'emerald': 'themeEmeraldBtn',
+    'purple': 'themePurpleBtn',
+    'sunset': 'themeSunsetBtn'
+  };
+  if (btnMap[theme]) {
+    const el = document.getElementById(btnMap[theme]);
+    if (el) el.classList.add('active');
+  }
+  generateMarketingPoster(currentSelectedTemplate);
+}
+
+// Generate Customized Branded Marketing Poster (Canvas)
+function generateMarketingPoster(template) {
+  const canvas = document.getElementById('posterCanvas');
+  if (!canvas || !currentUser) return;
+
+  const ctx = canvas.getContext('2d');
+  
+  // Theme Color Palettes
+  let bgGrad1 = '#0a0f1d', bgGrad2 = '#111827', accentColor = '#F59E0B', subAccent = '#10B981';
+  if (currentPosterTheme === 'emerald') {
+    bgGrad1 = '#022c22'; bgGrad2 = '#064e3b'; accentColor = '#34D399'; subAccent = '#FBBF24';
+  } else if (currentPosterTheme === 'purple') {
+    bgGrad1 = '#1e1b4b'; bgGrad2 = '#312e81'; accentColor = '#C084FC'; subAccent = '#38BDF8';
+  } else if (currentPosterTheme === 'sunset') {
+    bgGrad1 = '#431407'; bgGrad2 = '#7c2d12'; accentColor = '#FB923C'; subAccent = '#FDE047';
+  }
+
+  // Background Gradient
+  const grad = ctx.createLinearGradient(0, 0, 600, 750);
+  grad.addColorStop(0, bgGrad1);
+  grad.addColorStop(0.5, bgGrad2);
+  grad.addColorStop(1, '#000000');
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, 600, 750);
+
+  // Border Accent
+  ctx.strokeStyle = accentColor;
+  ctx.lineWidth = 6;
+  ctx.strokeRect(12, 12, 576, 726);
+
+  // Header Brand Tag
+  ctx.fillStyle = accentColor;
+  ctx.font = 'bold 22px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('👑 AFFILIATE EMPIRE BHARAT', 300, 55);
+
+  // Main Headline
+  ctx.fillStyle = '#FFFFFF';
+  ctx.font = '900 32px sans-serif';
+  ctx.fillText('EARN 60% COMMISSION', 300, 105);
+  ctx.fillText('DIRECTLY INTO YOUR UPI!', 300, 145);
+
+  // Dynamic Selected Template Hook Box
+  ctx.fillStyle = 'rgba(255, 255, 255, 0.08)';
+  ctx.fillRect(40, 175, 520, 110);
+  ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
+  ctx.lineWidth = 1;
+  ctx.strokeRect(40, 175, 520, 110);
+
+  ctx.fillStyle = subAccent;
+  ctx.font = 'bold 18px sans-serif';
+  const tmplTitle = template ? template.title : 'Mobile Daily Income Program';
+  ctx.fillText(`⚡ ${tmplTitle}`, 300, 205);
+
+  ctx.fillStyle = '#E2E8F0';
+  ctx.font = '15px sans-serif';
+  ctx.fillText('• Packages Start From ₹19 to ₹1499 Only', 300, 235);
+  ctx.fillText('• Verified Hot Buyer Leads with WhatsApp Numbers Included', 300, 260);
+
+  // User Permanent ID Badge
+  ctx.fillStyle = 'rgba(245, 158, 11, 0.15)';
+  ctx.fillRect(90, 305, 420, 80);
+  ctx.strokeStyle = accentColor;
+  ctx.lineWidth = 2;
+  ctx.strokeRect(90, 305, 420, 80);
+
+  ctx.fillStyle = '#94A3B8';
+  ctx.font = '14px sans-serif';
+  ctx.fillText('OFFICIAL PARTNER PERMANENT ID', 300, 332);
+
+  ctx.fillStyle = accentColor;
+  ctx.font = 'bold 30px monospace';
+  ctx.fillText(currentUser.permanentId, 300, 368);
+
+  // QR Code Area
+  ctx.fillStyle = '#FFFFFF';
+  ctx.fillRect(210, 410, 180, 180);
+
+  // Draw QR code onto canvas
+  const qrDiv = document.createElement('div');
+  new QRCode(qrDiv, {
+    text: `${window.location.origin}/?ref=${currentUser.permanentId}`,
+    width: 160,
+    height: 160
+  });
+
+  setTimeout(() => {
+    const qrCanvas = qrDiv.querySelector('canvas');
+    if (qrCanvas) {
+      ctx.drawImage(qrCanvas, 220, 420, 160, 160);
+    }
+
+    ctx.fillStyle = '#FFFFFF';
+    ctx.font = 'bold 18px sans-serif';
+    ctx.fillText('Scan to Register & Get Free Access', 300, 625);
+
+    ctx.fillStyle = '#94A3B8';
+    ctx.font = '14px sans-serif';
+    ctx.fillText('100% Genuine Direct Commission Platform', 300, 660);
+
+    ctx.fillStyle = subAccent;
+    ctx.font = 'bold 14px sans-serif';
+    ctx.fillText('⚡ Instant ₹50 Minimum UPI Withdrawal', 300, 690);
+  }, 200);
+}
+
+function downloadPoster() {
+  const canvas = document.getElementById('posterCanvas');
+  const link = document.createElement('a');
+  link.download = `Affiliate_Poster_${currentUser ? currentUser.permanentId : 'Pro'}.png`;
+  link.href = canvas.toDataURL('image/png');
+  link.click();
+}
+
+function copyCustomPromoScript(encodedText) {
+  const text = decodeURIComponent(encodedText);
+  const refUrl = `${window.location.origin}/?ref=${currentUser ? currentUser.permanentId : ''}`;
+  const script = text.replace(/\[LINK\]/g, refUrl) + `\n\n(Permanent Partner ID: ${currentUser ? currentUser.permanentId : ''})`;
+  navigator.clipboard.writeText(script);
+  alert('Promotional script copied to clipboard! Paste directly on your WhatsApp Status / Instagram Story.');
 }
 
 // Initiate Package Purchase & Open Dynamic UPI Modal
