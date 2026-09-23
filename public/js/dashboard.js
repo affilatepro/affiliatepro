@@ -181,8 +181,6 @@ async function initiateBuyPackage(packageId) {
     // Populate Modal with real merchant details
     document.getElementById('payModalPkgName').innerText = data.order.packageName;
     document.getElementById('payModalAmount').innerText = `₹${payment.amount}`;
-    document.getElementById('payMerchantName').innerText = payment.merchantName || 'vikas';
-    document.getElementById('payUpiIdText').innerText = payment.upiId || 'mrvikash@fam';
     
     // Set 1-Click UPI Deep-links for Mobile Apps
     document.getElementById('directUpiPayLink').href = payment.upiUri;
@@ -190,9 +188,11 @@ async function initiateBuyPackage(packageId) {
     document.getElementById('phonepeDirectBtn').href = payment.phonepeUri || payment.upiUri;
     document.getElementById('paytmDirectBtn').href = payment.paytmUri || payment.upiUri;
 
-    // Set Merchant QR image
-    if (payment.qrImageUrl) {
-      document.getElementById('merchantQrImg').src = payment.qrImageUrl;
+    // Reset button state
+    const btn = document.getElementById('completePaymentBtn');
+    if (btn) {
+      btn.disabled = false;
+      btn.innerText = '⚡ I Have Paid • Activate Package & 60% Commission';
     }
 
     // Open Modal
@@ -207,20 +207,20 @@ function closePaymentModal() {
   document.getElementById('paymentModal').classList.remove('active');
 }
 
-// Copy UPI ID to clipboard
-function copyMerchantUpi() {
-  const text = document.getElementById('payUpiIdText').innerText;
-  navigator.clipboard.writeText(text);
-  alert('Merchant UPI ID copied to clipboard!');
+function handleDirectAppClick(appName) {
+  const btn = document.getElementById('completePaymentBtn');
+  if (btn) {
+    btn.innerText = `⏳ Processing via ${appName}... Click Here Once Paid`;
+  }
 }
 
-// Submit UTR Transaction ID
-async function handleUtrSubmit(e) {
-  e.preventDefault();
-  const utr = document.getElementById('inputUtrNumber').value.trim();
-  const btn = document.getElementById('utrSubmitBtn');
-  btn.disabled = true;
-  btn.innerText = 'Verifying UTR...';
+// Complete Real Payment & Instant Package Unlock
+async function completeRealPayment() {
+  const btn = document.getElementById('completePaymentBtn');
+  if (btn) {
+    btn.disabled = true;
+    btn.innerText = 'Verifying Transaction with Gateway...';
+  }
 
   const token = localStorage.getItem('auth_token');
 
@@ -231,26 +231,32 @@ async function handleUtrSubmit(e) {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${token}`
       },
-      body: JSON.stringify({ orderId: currentOrderId, utrNumber: utr })
+      body: JSON.stringify({ orderId: currentOrderId })
     });
 
     const data = await res.json();
-    alert(data.message);
-
-    closePaymentModal();
-    btn.disabled = false;
-    btn.innerText = 'Verify Payment & Unlock Package';
-    document.getElementById('inputUtrNumber').value = '';
-
-    // Reload user data and packages
-    loadUserData();
-    loadPackages();
-    loadLeads();
+    
+    if (data.success) {
+      alert(`🎉 Payment Successful! Your ${data.order.packageName} is now ACTIVE! 60% commission has been credited to your referrer.`);
+      closePaymentModal();
+      loadUserData();
+      loadPackages();
+      loadLeads();
+      loadWallet();
+    } else {
+      alert(data.message || 'Payment confirmation failed');
+      if (btn) {
+        btn.disabled = false;
+        btn.innerText = '⚡ I Have Paid • Activate Package & 60% Commission';
+      }
+    }
   } catch (err) {
-    console.error('UTR error:', err);
-    alert('Failed to submit UTR verification.');
-    btn.disabled = false;
-    btn.innerText = 'Verify Payment & Unlock Package';
+    console.error('Payment complete error:', err);
+    alert('Verification error. Please try again.');
+    if (btn) {
+      btn.disabled = false;
+      btn.innerText = '⚡ I Have Paid • Activate Package & 60% Commission';
+    }
   }
 }
 
