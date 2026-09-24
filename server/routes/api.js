@@ -13,7 +13,7 @@ function generatePermanentId() {
   return `AP-${num}`;
 }
 
-// Helper to find user flexibly with microsecond indexed lookups (Scales to Lakhs / Millions of users 100% Free)
+// Helper to find user flexibly with microsecond indexed lookups (Exact matching only, zero false positives)
 function findUserByIdentifier(identifier) {
   if (!identifier) return null;
   const raw = String(identifier).trim();
@@ -27,12 +27,12 @@ function findUserByIdentifier(identifier) {
   let user = db.users.findById(raw);
   if (user) return user;
 
-  // 2. Direct Email lookup (Indexed)
+  // 2. Direct Email lookup (Indexed Exact Match)
   user = db.users.findOne({ email: lower }) ||
          db.users.findOne({ email: raw });
   if (user) return user;
 
-  // 3. Direct Permanent ID lookup (Indexed)
+  // 3. Direct Permanent ID lookup (Indexed Exact Match)
   const candidatePid = cleanPid.startsWith('AP') ? cleanPid : `AP-${cleanPid}`;
   const candidatePidDash = cleanPid.startsWith('AP') && !cleanPid.includes('-') ? `AP-${cleanPid.slice(2)}` : cleanPid;
   user = db.users.findOne({ permanentId: upper }) ||
@@ -40,42 +40,41 @@ function findUserByIdentifier(identifier) {
          db.users.findOne({ permanentId: candidatePidDash });
   if (user) return user;
 
-  // 4. Direct Phone lookup (Indexed)
-  if (digitsOnly) {
+  // 4. Direct Phone lookup (Exact Match)
+  if (digitsOnly && digitsOnly.length >= 10) {
     user = db.users.findOne({ phone: digitsOnly }) ||
            (last10.length === 10 ? db.users.findOne({ phone: last10 }) : null);
     if (user) return user;
   }
 
-  // 5. Full Name lookup
+  // 5. Full Name lookup (Exact Match)
   user = db.users.findOne({ fullName: raw }) ||
          db.users.findOne({ fullName: lower });
   if (user) return user;
 
-  // 6. Fast SQLite query fallback (Case-Insensitive search across million rows)
+  // 6. Fast SQLite query fallback (Case-Insensitive Exact Match)
   if (db.sqlite) {
     try {
       const sql = `
         SELECT data FROM users 
         WHERE LOWER(json_extract(data, '$.email')) = ?
-           OR LOWER(json_extract(data, '$.email')) LIKE ?
+           OR UPPER(json_extract(data, '$.permanentId')) = ?
            OR UPPER(json_extract(data, '$.permanentId')) = ?
            OR UPPER(json_extract(data, '$.permanentId')) = ?
            OR json_extract(data, '$.phone') = ?
-           OR json_extract(data, '$.phone') LIKE ?
+           OR (length(?) = 10 AND substr(json_extract(data, '$.phone'), -10) = ?)
            OR LOWER(json_extract(data, '$.fullName')) = ?
-           OR LOWER(json_extract(data, '$.fullName')) LIKE ?
         LIMIT 1
       `;
       const row = db.sqlite.prepare(sql).get(
         lower,
-        `${lower}%`,
         upper,
+        candidatePid,
         candidatePidDash,
         digitsOnly,
-        `%${last10}%`,
-        lower,
-        `%${lower}%`
+        last10,
+        last10,
+        lower
       );
       if (row && row.data) {
         return JSON.parse(row.data);
@@ -83,28 +82,46 @@ function findUserByIdentifier(identifier) {
     } catch (e) {}
   }
 
-  // 7. Comprehensive in-memory fallback scan
+  // 7. Comprehensive in-memory fallback scan (Exact Match Only)
   try {
     const allUsers = db.users.find();
     const matched = allUsers.find(u => {
-      const uEmail = (u.email || '').toLowerCase();
-      const uPid = (u.permanentId || '').toUpperCase();
+      const uEmail = (u.email || '').trim().toLowerCase();
+      const uPid = (u.permanentId || '').trim().toUpperCase();
       const uPhone = (u.phone || '').replace(/\D/g, '');
-      const uName = (u.fullName || '').toLowerCase();
+      const uName = (u.fullName || '').trim().toLowerCase();
 
       return uEmail === lower ||
-             (lower.length >= 3 && uEmail.startsWith(lower)) ||
              uPid === upper ||
              uPid === candidatePid ||
              uPid === candidatePidDash ||
-             (digitsOnly.length >= 6 && uPhone.includes(digitsOnly)) ||
-             uName === lower ||
-             (lower.length >= 3 && uName.includes(lower));
+             (digitsOnly.length >= 10 && (uPhone === digitsOnly || (last10.length === 10 && uPhone.slice(-10) === last10))) ||
+             uName === lower;
     });
     if (matched) return matched;
   } catch (e) {}
 
   return null;
+}
+
+// Strict Duplicate Check Helpers
+function findUserByExactEmail(email) {
+  if (!email) return null;
+  const clean = String(email).trim().toLowerCase();
+  const allUsers = db.users.find();
+  return allUsers.find(u => (u.email || '').trim().toLowerCase() === clean) || null;
+}
+
+function findUserByExactPhone(phone) {
+  if (!phone) return null;
+  const digits = String(phone).replace(/\D/g, '');
+  const last10 = digits.slice(-10);
+  if (!last10 || last10.length < 10) return null;
+  const allUsers = db.users.find();
+  return allUsers.find(u => {
+    const uDigits = (u.phone || '').replace(/\D/g, '');
+    return uDigits === digits || (uDigits.length >= 10 && uDigits.slice(-10) === last10);
+  }) || null;
 }
 
 // Authentication Middleware with Permanent Persistence Check
@@ -157,8 +174,8 @@ router.post('/auth/register', async (req, res) => {
     const rawPhoneDigits = phone.replace(/\D/g, '');
     const cleanPhone = rawPhoneDigits.length >= 10 ? rawPhoneDigits.slice(-10) : phone.trim();
 
-    // Check existing email or phone
-    const existingEmail = findUserByIdentifier(cleanEmail);
+    // Check existing email or phone (Strict exact match, zero false positives)
+    const existingEmail = findUserByExactEmail(cleanEmail);
     if (existingEmail) {
       return res.status(400).json({ 
         success: false, 
@@ -166,7 +183,7 @@ router.post('/auth/register', async (req, res) => {
       });
     }
 
-    const existingPhone = findUserByIdentifier(cleanPhone);
+    const existingPhone = findUserByExactPhone(cleanPhone);
     if (existingPhone) {
       return res.status(400).json({ 
         success: false, 
