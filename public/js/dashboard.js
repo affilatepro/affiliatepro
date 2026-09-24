@@ -93,10 +93,13 @@ async function loadUserData() {
       renderDownlineTeam(data.downlineStats);
     }
 
-    // Generate Marketing Poster, Official Partner ID Card & Verified Partner Certificate
-    generateMarketingPoster();
-    renderOfficialIdCard();
-    renderOfficialPartnerCertificate();
+    // Generate Marketing Poster, Official Partner ID Card & Verified Partner Certificate (Resilient)
+    try { generateMarketingPoster(); } catch (e) { console.warn('Poster gen non-fatal:', e); }
+    try { renderOfficialIdCard(); } catch (e) { console.warn('ID Card gen non-fatal:', e); }
+    try { renderOfficialPartnerCertificate(); } catch (e) { console.warn('Cert gen non-fatal:', e); }
+
+    // Re-render packages with user's active tier status highlighted
+    loadPackages();
 
   } catch (err) {
     console.error('Error loading user data:', err);
@@ -161,6 +164,7 @@ async function loadPackages() {
     container.innerHTML = sortedPackages.map(pkg => {
       const isActive = activePkgId === pkg.id;
       const visual = tierVisuals[pkg.id] || { icon: '⭐', gradient: 'linear-gradient(135deg, #F59E0B, #D97706)', leadsCount: `${pkg.leadsUnlocked || 10} Leads`, tag: 'PRO TIER' };
+      const payoutFormatted = (Number(pkg.affiliatePayout) || ((Number(pkg.price) || 0) * 0.6)).toFixed(2);
 
       return `
         <div class="pkg-card ${isActive ? 'featured' : ''}" style="border-radius: 20px; overflow: hidden; display: flex; flex-direction: column; ${isActive ? 'border: 2px solid #10B981; box-shadow: 0 0 25px rgba(16,185,129,0.35);' : ''}">
@@ -185,7 +189,7 @@ async function loadPackages() {
             <span style="font-size: 1.3rem;">💰</span>
             <div>
               <div style="font-size: 0.75rem; color: var(--text-dim); text-transform: uppercase; font-weight: 700;">Direct 60% Referral Cash</div>
-              <div style="font-size: 1.1rem; font-weight: 900; color: #10B981;">₹${pkg.affiliatePayout.toFixed(2)} per sale</div>
+              <div style="font-size: 1.1rem; font-weight: 900; color: #10B981;">₹${payoutFormatted} per sale</div>
             </div>
           </div>
 
@@ -549,6 +553,9 @@ async function loadLeads() {
     renderLeads(currentLeads);
   } catch (err) {
     console.error('Error loading leads:', err);
+  }
+}
+
 // Render Leads with 1-Click Smart Pitch Closer Bot
 function renderLeads(leads) {
   const container = document.getElementById('leadsContainer');
@@ -1077,15 +1084,36 @@ async function loadLeaderboard() {
 
 // Tab Switching
 function switchTab(tabId) {
+  if (tabId === 'packages' || tabId === 'store') {
+    switchTab('overview');
+    setTimeout(() => {
+      const pkgGrid = document.getElementById('dashboardPackagesGrid');
+      if (pkgGrid) pkgGrid.scrollIntoView({ behavior: 'smooth' });
+    }, 100);
+    return;
+  }
+
   document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
   document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
   document.querySelectorAll('.mobile-nav-btn').forEach(el => el.classList.remove('active'));
 
   const targetTab = document.getElementById(`tab-${tabId}`);
-  if (targetTab) targetTab.classList.add('active');
+  if (targetTab) {
+    targetTab.classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
 
   const navItems = document.querySelectorAll(`[onclick="switchTab('${tabId}')"]`);
   navItems.forEach(item => item.classList.add('active'));
+
+  if (tabId === 'marketing' && currentSelectedTemplate) {
+    try { generateMarketingPoster(currentSelectedTemplate); } catch (e) {}
+  } else if (tabId === 'idcard') {
+    try { renderOfficialIdCard(); } catch (e) {}
+    try { renderOfficialPartnerCertificate(); } catch (e) {}
+  } else if (tabId === 'overview') {
+    try { loadPackages(); } catch (e) {}
+  }
 }
 
 // Copy Referral Link
