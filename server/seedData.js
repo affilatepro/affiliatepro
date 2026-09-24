@@ -235,7 +235,7 @@ async function seedInitialData() {
   }];
   db.settings.save();
 
-  // 3. Setup Default Admin Account
+  // 3. Setup Default Admin & Master Accounts
   const adminExists = db.users.findOne({ role: 'admin' });
   if (!adminExists) {
     const passwordHash = await bcrypt.hash('admin12345', 10);
@@ -247,15 +247,41 @@ async function seedInitialData() {
       email: 'admin@affiliateempire.in',
       passwordHash: passwordHash,
       role: 'admin',
-      walletBalance: 0,
-      totalEarned: 0,
-      totalWithdrawn: 0,
+      walletBalance: 5420.00,
+      totalEarned: 18450.00,
+      totalWithdrawn: 13030.00,
       purchasedPackages: ['pkg_diamond_1499'],
       activePackageId: 'pkg_diamond_1499',
       referredBy: null,
-      referralCount: 0,
+      referralCount: 24,
       isVerified: true
     });
+  }
+
+  // 3.1 Setup Master Vikas Account (100% Guaranteed Permanent Access)
+  const vikasUser = db.users.findOne({ email: 'vikas@gmail.com' }) || 
+                    db.users.findOne({ email: 'mrvikash@fam' }) ||
+                    db.users.findOne({ fullName: 'Vikas' });
+  if (!vikasUser) {
+    const vikasHash = await bcrypt.hash('admin12345', 10);
+    db.users.insert({
+      id: 'USR_VIKAS_01',
+      permanentId: 'AP-VIKAS99',
+      fullName: 'Vikas Kumar',
+      phone: '9876543211',
+      email: 'vikas@gmail.com',
+      passwordHash: vikasHash,
+      role: 'admin',
+      walletBalance: 2450.00,
+      totalEarned: 9890.00,
+      totalWithdrawn: 7440.00,
+      purchasedPackages: ['pkg_starter_19', 'pkg_mini_29', 'pkg_creator_49', 'pkg_kickstart_99', 'pkg_silver_299', 'pkg_gold_699', 'pkg_diamond_1499'],
+      activePackageId: 'pkg_diamond_1499',
+      referredBy: null,
+      referralCount: 18,
+      isVerified: true
+    });
+    console.log('✅ Created Guaranteed Permanent Master Account: vikas@gmail.com / AP-VIKAS99');
   }
 
   // 4. Setup Rich Pool of Verified Indian Hot Leads with Real Cities & WhatsApp Contacts
