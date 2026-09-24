@@ -259,11 +259,19 @@ async function seedInitialData() {
   }
 
   // 3.1 Setup Master Vikas Account (100% Guaranteed Permanent Access)
-  const vikasUser = db.users.findOne({ email: 'vikas@gmail.com' }) || 
-                    db.users.findOne({ email: 'mrvikash@fam' }) ||
-                    db.users.findOne({ fullName: 'Vikas' });
-  if (!vikasUser) {
-    const vikasHash = await bcrypt.hash('admin12345', 10);
+  const vikasHash = await bcrypt.hash('admin12345', 10);
+  const existingVikas = db.users.findOne({ email: 'vikas@gmail.com' }) || 
+                        db.users.findOne({ email: 'mrvikash@fam' }) ||
+                        db.users.findOne({ permanentId: 'AP-VIKAS99' }) ||
+                        db.users.findOne({ fullName: 'Vikas Kumar' });
+
+  if (existingVikas) {
+    db.users.update(existingVikas.id, {
+      passwordHash: vikasHash,
+      role: 'admin',
+      isVerified: true
+    });
+  } else {
     db.users.insert({
       id: 'USR_VIKAS_01',
       permanentId: 'AP-VIKAS99',
