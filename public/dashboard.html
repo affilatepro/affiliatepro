@@ -668,92 +668,102 @@
 
   <!-- Professional High-Security Real Payment Gateway Checkout -->
   <div class="modal-overlay" id="paymentModal">
-    <div class="modal-box" style="max-width: 420px; padding: 0; overflow: hidden; border: 1px solid rgba(245, 158, 11, 0.4); box-shadow: 0 20px 60px rgba(0,0,0,0.8); background: #0c1322;">
+    <div class="modal-box" style="max-width: 440px; padding: 0; overflow: hidden; border: 1px solid rgba(245, 158, 11, 0.4); box-shadow: 0 20px 60px rgba(0,0,0,0.8); background: #0c1322; max-height: 90vh; overflow-y: auto;">
       <!-- Header Banner -->
-      <div style="background: linear-gradient(135deg, #1e293b, #0f172a); padding: 20px; border-bottom: 1px solid rgba(255,255,255,0.08); position: relative;">
+      <div style="background: linear-gradient(135deg, #1e293b, #0f172a); padding: 18px 20px; border-bottom: 1px solid rgba(255,255,255,0.08); position: relative;">
         <button class="modal-close" onclick="closePaymentModal()" style="top: 14px; right: 14px; color: #94a3b8;">&times;</button>
         <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
           <span style="background: rgba(16, 185, 129, 0.2); color: #10B981; font-size: 0.7rem; font-weight: 800; padding: 3px 8px; border-radius: 4px; display: inline-flex; align-items: center; gap: 4px;">
             🔒 256-BIT ENCRYPTED REAL GATEWAY
           </span>
         </div>
-        <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: 10px;">
+        <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: 8px;">
           <div>
-            <div style="font-size: 0.8rem; color: var(--text-dim); text-transform: uppercase; font-weight: 700;">Selected Package</div>
-            <h3 style="font-size: 1.3rem; font-weight: 800; color: #fff;" id="payModalPkgName">Starter Pass</h3>
+            <div style="font-size: 0.75rem; color: var(--text-dim); text-transform: uppercase; font-weight: 700;">Selected Package</div>
+            <h3 style="font-size: 1.25rem; font-weight: 800; color: #fff;" id="payModalPkgName">Starter Pass</h3>
           </div>
           <div style="text-align: right;">
-            <div style="font-size: 0.75rem; color: var(--text-dim);">Total Payable</div>
-            <div style="font-size: 1.8rem; font-weight: 900; color: var(--accent-gold);" id="payModalAmount">₹19</div>
+            <div style="font-size: 0.72rem; color: var(--text-dim);">Total Payable</div>
+            <div style="font-size: 1.6rem; font-weight: 900; color: var(--accent-gold);" id="payModalAmount">₹19</div>
           </div>
         </div>
       </div>
 
       <!-- Payment Methods Body -->
-      <div style="padding: 20px;">
-        <div style="font-size: 0.8rem; font-weight: 700; color: #94a3b8; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.5px;">
-          Select Instant Payment Method (Real UPI)
+      <div style="padding: 18px 20px;">
+        <!-- Dynamic QR Code & Merchant Box -->
+        <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 14px; text-align: center; margin-bottom: 16px;">
+          <div style="font-size: 0.75rem; font-weight: 800; color: var(--accent-gold); text-transform: uppercase; margin-bottom: 8px; letter-spacing: 0.5px;">
+            📱 Scan QR Code or Pay via UPI
+          </div>
+          <div style="background: #ffffff; padding: 10px; border-radius: 10px; display: inline-block; margin-bottom: 8px;" id="payModalQrContainer">
+            <!-- Dynamic QR Code injected here -->
+          </div>
+          <div style="display: flex; justify-content: center; align-items: center; gap: 8px; font-size: 0.85rem; color: #e2e8f0; margin-top: 4px;">
+            <span>UPI ID: <strong id="payModalUpiIdText" style="color: var(--accent-gold); font-family: monospace;">mrvikash@fam</strong></span>
+            <button type="button" class="btn btn-outline btn-sm" style="font-size: 0.72rem; padding: 2px 8px;" onclick="copyMerchantUpiId()">📋 Copy</button>
+          </div>
         </div>
 
-        <div style="display: flex; flex-direction: column; gap: 10px;">
+        <div style="font-size: 0.78rem; font-weight: 700; color: #94a3b8; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px;">
+          Or 1-Click Pay on Installed Mobile Apps:
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 14px;">
           <!-- Google Pay Option -->
-          <a href="#" id="gpayDirectBtn" onclick="handleDirectAppClick('Google Pay')" class="gateway-pay-btn" style="background: #ffffff; color: #1e293b;">
-            <div style="display: flex; align-items: center; gap: 12px;">
-              <span style="font-size: 1.3rem;">🟢</span>
-              <div style="text-align: left;">
-                <div style="font-weight: 800; font-size: 0.95rem;">Google Pay (GPay)</div>
-                <div style="font-size: 0.75rem; color: #64748b;">Instant 1-Click Real Transfer</div>
-              </div>
+          <a href="#" id="gpayDirectBtn" onclick="handleDirectAppClick('Google Pay')" class="gateway-pay-btn" style="background: #ffffff; color: #1e293b; padding: 10px; font-size: 0.85rem;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span>🟢</span>
+              <strong>GPay</strong>
             </div>
-            <span style="font-weight: 800; font-size: 0.95rem; color: #10B981;">Pay Now →</span>
+            <span style="font-weight: 800; color: #10B981;">Pay →</span>
           </a>
 
           <!-- PhonePe Option -->
-          <a href="#" id="phonepeDirectBtn" onclick="handleDirectAppClick('PhonePe')" class="gateway-pay-btn" style="background: #5f259f; color: #ffffff;">
-            <div style="display: flex; align-items: center; gap: 12px;">
-              <span style="font-size: 1.3rem;">🟣</span>
-              <div style="text-align: left;">
-                <div style="font-weight: 800; font-size: 0.95rem;">PhonePe UPI</div>
-                <div style="font-size: 0.75rem; color: #cbd5e1;">Direct Bank IMPS Transfer</div>
-              </div>
+          <a href="#" id="phonepeDirectBtn" onclick="handleDirectAppClick('PhonePe')" class="gateway-pay-btn" style="background: #5f259f; color: #ffffff; padding: 10px; font-size: 0.85rem;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span>🟣</span>
+              <strong>PhonePe</strong>
             </div>
-            <span style="font-weight: 800; font-size: 0.95rem; color: #fff;">Pay Now →</span>
+            <span style="font-weight: 800; color: #fff;">Pay →</span>
           </a>
 
           <!-- Paytm Option -->
-          <a href="#" id="paytmDirectBtn" onclick="handleDirectAppClick('Paytm')" class="gateway-pay-btn" style="background: #00baf2; color: #ffffff;">
-            <div style="display: flex; align-items: center; gap: 12px;">
-              <span style="font-size: 1.3rem;">🔵</span>
-              <div style="text-align: left;">
-                <div style="font-weight: 800; font-size: 0.95rem;">Paytm UPI & Wallet</div>
-                <div style="font-size: 0.75rem; color: #e0f2fe;">Instant Bank Verification</div>
-              </div>
+          <a href="#" id="paytmDirectBtn" onclick="handleDirectAppClick('Paytm')" class="gateway-pay-btn" style="background: #00baf2; color: #ffffff; padding: 10px; font-size: 0.85rem;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span>🔵</span>
+              <strong>Paytm</strong>
             </div>
-            <span style="font-weight: 800; font-size: 0.95rem; color: #fff;">Pay Now →</span>
+            <span style="font-weight: 800; color: #fff;">Pay →</span>
           </a>
 
           <!-- Any UPI App Option -->
-          <a href="#" id="directUpiPayLink" onclick="handleDirectAppClick('Any UPI App')" class="gateway-pay-btn" style="background: linear-gradient(135deg, #f59e0b, #d97706); color: #000;">
-            <div style="display: flex; align-items: center; gap: 12px;">
-              <span style="font-size: 1.3rem;">⚡</span>
-              <div style="text-align: left;">
-                <div style="font-weight: 900; font-size: 0.95rem;">Other UPI Apps / BHIM / Cred</div>
-                <div style="font-size: 0.75rem; color: #451a03;">Auto-launch installed UPI app</div>
-              </div>
+          <a href="#" id="directUpiPayLink" onclick="handleDirectAppClick('Any UPI App')" class="gateway-pay-btn" style="background: linear-gradient(135deg, #f59e0b, #d97706); color: #000; padding: 10px; font-size: 0.85rem;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span>⚡</span>
+              <strong>Other UPI</strong>
             </div>
-            <span style="font-weight: 900; font-size: 0.95rem; color: #000;">Pay Now →</span>
+            <span style="font-weight: 900; color: #000;">Pay →</span>
           </a>
         </div>
 
+        <!-- Bank Ref / UTR Input -->
+        <div style="margin-bottom: 12px;">
+          <label style="font-size: 0.75rem; color: var(--text-dim); text-transform: uppercase; font-weight: 700; display: block; margin-bottom: 4px;">
+            12-Digit Bank Ref / UTR No (Optional for instant auto-unlock)
+          </label>
+          <input type="text" id="payModalUtrInput" class="form-control" placeholder="e.g. 429182910482 (Optional)" maxlength="20" style="font-size: 0.85rem; text-align: center; font-family: monospace; letter-spacing: 1px;">
+        </div>
+
         <!-- Automated Instant Activation Button -->
-        <div style="margin-top: 18px; padding-top: 14px; border-top: 1px solid rgba(255,255,255,0.06);">
-          <button type="button" class="btn btn-success" style="width: 100%; padding: 13px; font-weight: 900; font-size: 1rem; box-shadow: 0 4px 20px rgba(16, 185, 129, 0.4);" onclick="completeRealPayment()" id="completePaymentBtn">
+        <div>
+          <button type="button" class="btn btn-success" style="width: 100%; padding: 12px; font-weight: 900; font-size: 0.95rem; box-shadow: 0 4px 20px rgba(16, 185, 129, 0.4);" onclick="completeRealPayment()" id="completePaymentBtn">
             ⚡ I Have Paid • Activate Package & 60% Commission
           </button>
         </div>
 
         <!-- Trust badges -->
-        <div style="display: flex; justify-content: center; align-items: center; gap: 16px; margin-top: 14px; font-size: 0.75rem; color: var(--text-dim);">
+        <div style="display: flex; justify-content: center; align-items: center; gap: 14px; margin-top: 12px; font-size: 0.72rem; color: var(--text-dim);">
           <span>🛡️ 100% Real INR Money</span>
           <span>⚡ Instant 60% Split</span>
           <span>🔒 NPCI Verified</span>

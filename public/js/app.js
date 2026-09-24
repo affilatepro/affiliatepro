@@ -221,6 +221,18 @@ function closeAuthModal() {
   document.getElementById('authModal').classList.remove('active');
 }
 
+function togglePasswordVisibility(inputId, btn) {
+  const input = document.getElementById(inputId);
+  if (!input) return;
+  if (input.type === 'password') {
+    input.type = 'text';
+    btn.innerText = '🔒';
+  } else {
+    input.type = 'password';
+    btn.innerText = '👁️';
+  }
+}
+
 function switchAuthView(view) {
   const regBox = document.getElementById('registerFormBox');
   const loginBox = document.getElementById('loginFormBox');

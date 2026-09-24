@@ -460,13 +460,34 @@ async function initiateBuyPackage(packageId) {
     document.getElementById('payModalPkgName').innerText = data.order.packageName;
     document.getElementById('payModalAmount').innerText = `₹${payment.amount}`;
     
+    const upiIdEl = document.getElementById('payModalUpiIdText');
+    if (upiIdEl) upiIdEl.innerText = payment.upiId || 'mrvikash@fam';
+
+    // Render Real Dynamic UPI QR Code
+    const qrContainer = document.getElementById('payModalQrContainer');
+    if (qrContainer) {
+      qrContainer.innerHTML = '';
+      try {
+        new QRCode(qrContainer, {
+          text: payment.upiUri,
+          width: 160,
+          height: 160
+        });
+      } catch (e) {
+        console.warn('QR render error:', e);
+      }
+    }
+
     // Set 1-Click UPI Deep-links for Mobile Apps
     document.getElementById('directUpiPayLink').href = payment.upiUri;
     document.getElementById('gpayDirectBtn').href = payment.gpayUri || payment.upiUri;
     document.getElementById('phonepeDirectBtn').href = payment.phonepeUri || payment.upiUri;
     document.getElementById('paytmDirectBtn').href = payment.paytmUri || payment.upiUri;
 
-    // Reset button state
+    // Reset button & input state
+    const utrInput = document.getElementById('payModalUtrInput');
+    if (utrInput) utrInput.value = '';
+
     const btn = document.getElementById('completePaymentBtn');
     if (btn) {
       btn.disabled = false;
@@ -479,6 +500,13 @@ async function initiateBuyPackage(packageId) {
     console.error('Buy error:', err);
     alert('Failed to connect to payment engine.');
   }
+}
+
+function copyMerchantUpiId() {
+  const upiIdEl = document.getElementById('payModalUpiIdText');
+  const upiId = upiIdEl ? upiIdEl.innerText : 'mrvikash@fam';
+  navigator.clipboard.writeText(upiId);
+  alert('Merchant UPI ID copied: ' + upiId);
 }
 
 function closePaymentModal() {
@@ -495,6 +523,9 @@ function handleDirectAppClick(appName) {
 // Complete Real Payment & Instant Package Unlock
 async function completeRealPayment() {
   const btn = document.getElementById('completePaymentBtn');
+  const utrInput = document.getElementById('payModalUtrInput');
+  const utrNumber = utrInput ? utrInput.value.trim() : '';
+
   if (btn) {
     btn.disabled = true;
     btn.innerText = 'Verifying Transaction with Gateway...';
@@ -509,13 +540,13 @@ async function completeRealPayment() {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${token}`
       },
-      body: JSON.stringify({ orderId: currentOrderId })
+      body: JSON.stringify({ orderId: currentOrderId, utrNumber: utrNumber })
     });
 
     const data = await res.json();
     
     if (data.success) {
-      alert(`🎉 Payment Successful! Your ${data.order.packageName} is now ACTIVE! 60% commission has been credited to your referrer.`);
+      alert(`🎉 Payment Verified! Your ${data.order.packageName} is now ACTIVE! 60% direct commission has been credited to your referrer.`);
       closePaymentModal();
       loadUserData();
       loadPackages();
