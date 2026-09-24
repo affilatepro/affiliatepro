@@ -41,8 +41,11 @@
         <button class="nav-item" onclick="switchAdminTab('all-users')">
           <span class="icon">📊</span> All Users & Downlines
         </button>
+        <button class="nav-item" onclick="switchAdminTab('email-smtp')">
+          <span class="icon">📧</span> Real SMTP & Email Gateway
+        </button>
         <button class="nav-item" onclick="switchAdminTab('settings')">
-          <span class="icon">⚙️</span> Platform & UPI Settings
+          <span class="icon">⚙️</span> Platform & Legal Settings
         </button>
       </nav>
 
@@ -263,46 +266,161 @@
         </div>
       </div>
 
-      <!-- TAB 5: PLATFORM SETTINGS & UPI CONFIG -->
+      <!-- TAB 5: REAL SMTP & EMAIL GATEWAY CONFIG -->
+      <div class="tab-content" id="admin-tab-email-smtp">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px;">
+          <!-- SMTP Configuration Form -->
+          <div style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 28px;">
+            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+              <span style="font-size: 1.6rem;">📧</span>
+              <h3 style="font-size: 1.3rem; font-weight: 800;">Real SMTP Email Gateway</h3>
+            </div>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 20px;">
+              Enter your SMTP credentials (Gmail App Password, SendGrid, Hostinger, etc.) to deliver real Welcome emails, Purchase Invoices, and Reset OTPs directly to inboxes.
+            </p>
+
+            <form onsubmit="handleAdminSaveSmtp(event)">
+              <div class="form-group">
+                <label>SMTP Host Server</label>
+                <input type="text" id="setSmtpHost" class="form-control" placeholder="e.g. smtp.gmail.com" required>
+              </div>
+
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                <div class="form-group">
+                  <label>SMTP Port</label>
+                  <input type="number" id="setSmtpPort" class="form-control" placeholder="587 or 465" required>
+                </div>
+                <div class="form-group" style="display: flex; align-items: center; gap: 8px; margin-top: 24px;">
+                  <input type="checkbox" id="setSmtpSecure" style="width: 18px; height: 18px; accent-color: var(--accent-gold);">
+                  <label for="setSmtpSecure" style="margin-bottom: 0; cursor: pointer; color: #fff; font-size: 0.85rem;">
+                    SSL / TLS (Port 465)
+                  </label>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label>SMTP Username / Gmail Address</label>
+                <input type="email" id="setSmtpUser" class="form-control" placeholder="e.g. yourbusiness@gmail.com" required>
+              </div>
+
+              <div class="form-group">
+                <label>SMTP Password / App Password</label>
+                <input type="password" id="setSmtpPass" class="form-control" placeholder="16-character Gmail App Password or SMTP Pass" required>
+                <small style="color: var(--text-dim); font-size: 0.75rem;">For Gmail: Use Google Account > Security > App Passwords.</small>
+              </div>
+
+              <div class="form-group">
+                <label>Sender From Email Address</label>
+                <input type="email" id="setSmtpFrom" class="form-control" placeholder="e.g. support@affiliateempire.in">
+              </div>
+
+              <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 12px;">
+                💾 Save SMTP Credentials
+              </button>
+            </form>
+          </div>
+
+          <!-- Live Test & Status Box -->
+          <div style="background: var(--bg-card); border: 1px solid rgba(16,185,129,0.3); border-radius: var(--radius-lg); padding: 28px; display: flex; flex-direction: column;">
+            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+              <span style="font-size: 1.6rem;">⚡</span>
+              <h3 style="font-size: 1.3rem; font-weight: 800;">Instant Live Email Test</h3>
+            </div>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 20px;">
+              Verify that real emails are landing in user inboxes right away.
+            </p>
+
+            <div class="form-group">
+              <label>Send Live Test Email To:</label>
+              <input type="email" id="testEmailInput" class="form-control" placeholder="e.g. yourpersonal@gmail.com">
+            </div>
+
+            <button type="button" class="btn btn-success" style="width: 100%; font-weight: 800;" onclick="handleSendTestEmail()">
+              🚀 Send Live Test Email Now
+            </button>
+
+            <div id="testEmailStatus" style="margin-top: 16px; font-size: 0.85rem; display: none; padding: 12px; border-radius: 8px;"></div>
+
+            <div style="margin-top: auto; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.06);">
+              <h5 style="color: var(--accent-gold); font-size: 0.85rem; margin-bottom: 6px;">Automatic Live Email Triggers:</h5>
+              <ul style="font-size: 0.8rem; color: var(--text-muted); padding-left: 18px; line-height: 1.6;">
+                <li>🎉 <strong>Welcome Email:</strong> Dispatched immediately upon user registration with their permanent ID.</li>
+                <li>⚡ <strong>Official Invoice:</strong> Dispatched immediately upon payment confirmation for packages ₹19 - ₹1499.</li>
+                <li>🔐 <strong>Password Reset:</strong> 6-Digit OTP dispatched immediately when requested.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 6: PLATFORM SETTINGS & LEGAL COMPLIANCE -->
       <div class="tab-content" id="admin-tab-settings">
-        <div style="max-width: 700px; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 28px;">
-          <h3 style="font-size: 1.3rem; font-weight: 800; margin-bottom: 16px;">⚙️ Platform & UPI Gateway Settings</h3>
+        <div style="max-width: 760px; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 28px;">
+          <h3 style="font-size: 1.3rem; font-weight: 800; margin-bottom: 16px;">⚙️ Platform, UPI & Legal Compliance Details</h3>
 
           <form onsubmit="handleAdminSaveSettings(event)">
-            <div class="form-group">
-              <label>Merchant UPI ID (Where buyers send money)</label>
-              <input type="text" id="setUpiId" class="form-control" placeholder="e.g. merchant@okhdfcbank" required>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+              <div class="form-group">
+                <label>Merchant UPI ID (Payment Target)</label>
+                <input type="text" id="setUpiId" class="form-control" placeholder="e.g. merchant@okhdfcbank" required>
+              </div>
+
+              <div class="form-group">
+                <label>Merchant Display Name</label>
+                <input type="text" id="setMerchantName" class="form-control" placeholder="e.g. Affiliate Pro Services" required>
+              </div>
             </div>
 
-            <div class="form-group">
-              <label>Merchant Display Name</label>
-              <input type="text" id="setMerchantName" class="form-control" placeholder="e.g. Affiliate Pro Services" required>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+              <div class="form-group">
+                <label>Support WhatsApp Helpline (with 91)</label>
+                <input type="text" id="setSupportWhatsapp" class="form-control" placeholder="919876543210" required>
+              </div>
+
+              <div class="form-group">
+                <label>Support Email Address</label>
+                <input type="email" id="setSupportEmail" class="form-control" placeholder="support@affiliateempire.in" required>
+              </div>
             </div>
 
-            <div class="form-group">
-              <label>Support WhatsApp Helpline Number (with 91 country code)</label>
-              <input type="text" id="setSupportWhatsapp" class="form-control" placeholder="919876543210" required>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+              <div class="form-group">
+                <label>Minimum Withdrawal Amount (₹)</label>
+                <input type="number" id="setMinWithdrawal" class="form-control" value="50" min="10" required>
+              </div>
+
+              <div class="form-group">
+                <label>Government MSME / Udyam Number</label>
+                <input type="text" id="setMsmeRegNo" class="form-control" placeholder="UDYAM-DL-08-0048291">
+              </div>
             </div>
 
-            <div class="form-group">
-              <label>Minimum Withdrawal Amount (₹)</label>
-              <input type="number" id="setMinWithdrawal" class="form-control" value="50" min="10" required>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+              <div class="form-group">
+                <label>ISO Certification Number</label>
+                <input type="text" id="setIsoCertNo" class="form-control" placeholder="ISO 9001:2015">
+              </div>
+
+              <div class="form-group">
+                <label>CIN / Legal Registration No</label>
+                <input type="text" id="setCinGovNo" class="form-control" placeholder="U74999DL2024PTC392810">
+              </div>
             </div>
 
             <div class="form-group">
               <label>Global Announcement Banner Text</label>
-              <textarea id="setAnnouncement" class="form-control" rows="3"></textarea>
+              <textarea id="setAnnouncement" class="form-control" rows="2"></textarea>
             </div>
 
             <div class="form-group" style="display: flex; align-items: center; gap: 10px; margin-top: 14px;">
               <input type="checkbox" id="setAutoApprove" style="width: 20px; height: 20px; accent-color: var(--accent-gold);">
               <label for="setAutoApprove" style="margin-bottom: 0; cursor: pointer; color: #fff;">
-                <strong>Auto-Approve Payments:</strong> Automatically unlock package when user enters UTR (Skip manual review)
+                <strong>Auto-Approve Payments:</strong> Automatically unlock package when user enters UTR (Instant Checkout)
               </label>
             </div>
 
             <button type="submit" class="btn btn-primary" style="margin-top: 16px;">
-              💾 Save System Settings
+              💾 Save All Platform & Legal Settings
             </button>
           </form>
         </div>

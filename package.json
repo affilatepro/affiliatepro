@@ -9,9 +9,15 @@
     "test": "node test_system.js"
   },
   "engines": {
-    "node": ">=18.0.0"
+    "node": ">=22.0.0"
   },
-  "keywords": ["affiliate", "fintech", "upi", "commission", "bharat"],
+  "keywords": [
+    "affiliate",
+    "fintech",
+    "upi",
+    "commission",
+    "bharat"
+  ],
   "author": "Vikas",
   "license": "ISC",
   "dependencies": {
@@ -19,6 +25,7 @@
     "compression": "^1.7.4",
     "cors": "^2.8.6",
     "express": "^5.2.1",
-    "jsonwebtoken": "^9.0.3"
+    "jsonwebtoken": "^9.0.3",
+    "nodemailer": "^10.0.10"
   }
 }
