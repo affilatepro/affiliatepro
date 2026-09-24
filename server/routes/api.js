@@ -162,7 +162,7 @@ router.post('/auth/register', async (req, res) => {
     if (existingEmail) {
       return res.status(400).json({ 
         success: false, 
-        message: `This Email is already registered with Permanent ID (${existingEmail.permanentId}). Please login with your password.` 
+        message: `Yeh Email ID pehle se registered hai (Permanent ID: ${existingEmail.permanentId}). Agar aap naye customer/friend ko refer kar rahe hain toh unka alag naya Email ID enter karein.` 
       });
     }
 
@@ -170,7 +170,7 @@ router.post('/auth/register', async (req, res) => {
     if (existingPhone) {
       return res.status(400).json({ 
         success: false, 
-        message: `This Phone Number is already registered with Permanent ID (${existingPhone.permanentId}). Please login with your password.` 
+        message: `Yeh Mobile Number pehle se registered hai (Permanent ID: ${existingPhone.permanentId}). Naye referral user ke liye unka alag Mobile Number enter karein.` 
       });
     }
 
